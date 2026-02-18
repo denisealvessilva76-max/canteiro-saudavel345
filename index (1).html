@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Canteiro Saudável</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--laranja:#FF6B35;--laranja2:#E55A2B;--verde:#22C55E;--amarelo:#F59E0B;--vermelho:#EF4444;--azul:#3B82F6;--azul-escuro:#1E6A8D;--bg:#F4F6F9;--card:#FFFFFF;--texto:#1F2937;--texto2:#6B7280;--borda:#E5E7EB;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--texto);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+.hidden{display:none!important;}
+
+/* ====== LOGIN ====== */
+#tela-login{min-height:100vh;background:linear-gradient(160deg,var(--laranja) 0%,var(--laranja2) 100%);display:flex;align-items:center;justify-content:center;padding:1.5rem;}
+.login-box{background:#fff;border-radius:28px;padding:2rem;width:100%;max-width:400px;box-shadow:0 24px 60px rgba(0,0,0,.25);animation:subir .5s ease;}
+@keyframes subir{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+.logo-login{width:90px;height:90px;background:linear-gradient(135deg,var(--laranja),var(--laranja2));border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 1rem;box-shadow:0 8px 24px rgba(255,107,53,.35);}
+.login-h1{font-size:1.6rem;font-weight:800;text-align:center;margin-bottom:.25rem;}
+.login-sub{color:var(--texto2);font-size:.875rem;text-align:center;margin-bottom:1.75rem;}
+.campo{margin-bottom:1.25rem;}
+.campo label{display:block;font-weight:600;font-size:.875rem;margin-bottom:.4rem;}
+.campo input,.campo select,.campo textarea{width:100%;padding:.85rem 1rem;border:2px solid var(--borda);border-radius:12px;font-size:.95rem;font-family:inherit;transition:border .2s;background:#fff;}
+.campo input:focus,.campo select:focus,.campo textarea:focus{outline:none;border-color:var(--laranja);}
+.campo .hint{font-size:.75rem;color:var(--texto2);margin-top:.3rem;}
+.btn{width:100%;padding:.95rem;border:none;border-radius:12px;font-weight:700;font-size:1rem;cursor:pointer;transition:all .2s;font-family:inherit;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:linear-gradient(135deg,var(--laranja),var(--laranja2));color:#fff;box-shadow:0 4px 14px rgba(255,107,53,.3);margin-bottom:.75rem;}
+.btn-ghost{background:var(--bg);color:var(--texto);}
+.btn-verde{background:var(--verde);color:#fff;}
+.btn-azul{background:var(--azul-escuro);color:#fff;}
+.btn-vermelho{background:var(--vermelho);color:#fff;}
+.btn-amarelo{background:var(--amarelo);color:#fff;}
+.msg-erro{background:#FEE2E2;color:#991B1B;padding:.85rem;border-radius:10px;font-size:.875rem;margin-bottom:1rem;display:none;}
+.msg-ok{background:#DCFCE7;color:#166534;padding:.85rem;border-radius:10px;font-size:.875rem;margin-bottom:1rem;display:none;}
+.msg-erro.show,.msg-ok.show{display:block;animation:subir .3s ease;}
+
+/* ====== APP ====== */
+#app{max-width:480px;margin:0 auto;min-height:100vh;display:none;flex-direction:column;background:var(--bg);}
+#app.on{display:flex;}
+
+/* ====== HEADER ====== */
+.header{background:linear-gradient(135deg,var(--laranja),var(--laranja2));color:#fff;padding:1.25rem 1rem 1.5rem;position:sticky;top:0;z-index:50;}
+.h-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;}
+.h-logo{display:flex;align-items:center;gap:.75rem;}
+.h-logo-icon{width:44px;height:44px;background:rgba(255,255,255,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+.h-logo-txt h1{font-size:1.1rem;font-weight:800;}
+.h-logo-txt p{font-size:.75rem;opacity:.9;}
+.btn-sair{background:rgba(255,255,255,.2);border:none;color:#fff;padding:.4rem .85rem;border-radius:8px;font-weight:600;cursor:pointer;font-size:.8rem;}
+.h-greeting{font-size:1.3rem;font-weight:700;margin-bottom:.2rem;}
+.h-sub{font-size:.8rem;opacity:.9;}
+.h-badge{display:inline-block;background:rgba(255,255,255,.2);padding:.2rem .7rem;border-radius:8px;font-size:.75rem;font-weight:600;margin-top:.4rem;}
+
+/* ====== NAV ====== */
+.nav{background:#fff;position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;display:flex;justify-content:space-around;padding:.5rem;box-shadow:0 -2px 12px rgba(0,0,0,.08);z-index:50;}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:.15rem;padding:.4rem;border:none;background:transparent;color:var(--texto2);cursor:pointer;transition:color .2s;font-size:.65rem;font-weight:500;}
+.nav-btn.ativo{color:var(--laranja);}
+.nav-icon{font-size:1.35rem;}
+
+/* ====== CONTEUDO ====== */
+.pagina{flex:1;padding:1.25rem 1rem;padding-bottom:90px;display:none;animation:subir .3s ease;}
+.pagina.ativa{display:block;}
+
+/* ====== CARDS ====== */
+.card{background:var(--card);border-radius:18px;padding:1.25rem;box-shadow:0 2px 10px rgba(0,0,0,.07);margin-bottom:1.25rem;}
+.card-titulo{font-size:1rem;font-weight:700;margin-bottom:1rem;}
+
+/* ====== GRID STATS ====== */
+.stats-3{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1.25rem;}
+.stat{background:linear-gradient(135deg,var(--laranja),var(--laranja2));color:#fff;border-radius:14px;padding:.85rem;text-align:center;}
+.stat-val{font-size:1.75rem;font-weight:800;line-height:1;}
+.stat-lab{font-size:.7rem;opacity:.9;margin-top:.25rem;}
+
+/* ====== ITEM LISTA ====== */
+.item{display:flex;align-items:center;gap:.85rem;padding:.85rem;background:#fff;border-radius:12px;margin-bottom:.65rem;box-shadow:0 1px 4px rgba(0,0,0,.06);cursor:pointer;transition:transform .15s;}
+.item:active{transform:scale(.98);}
+.item-icon{width:44px;height:44px;background:linear-gradient(135deg,var(--laranja),var(--laranja2));color:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+.item-body{flex:1;}
+.item-title{font-weight:600;font-size:.9rem;}
+.item-sub{font-size:.78rem;color:var(--texto2);}
+.item-arrow{color:var(--texto2);font-size:1.1rem;}
+
+/* ====== PROGRESSO ====== */
+.barra-wrap{background:var(--bg);border-radius:12px;height:22px;overflow:hidden;position:relative;margin:.75rem 0;}
+.barra{background:linear-gradient(90deg,var(--laranja),var(--laranja2));height:100%;transition:width .4s ease;}
+.barra-txt{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-weight:700;font-size:.8rem;white-space:nowrap;}
+
+/* ====== BOTÕES ÁGUA ====== */
+.agua-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:.75rem;}
+.agua-btn{background:var(--azul-escuro);color:#fff;border:none;border-radius:14px;padding:1rem;cursor:pointer;font-weight:700;font-size:.875rem;transition:transform .15s;font-family:inherit;}
+.agua-btn:active{transform:scale(.95);}
+.agua-icon{font-size:1.75rem;margin-bottom:.25rem;display:block;}
+
+/* ====== EMOJIS CHECK-IN ====== */
+.emoji-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin:.75rem 0;}
+.emoji-card{background:#fff;border:2px solid var(--borda);border-radius:16px;padding:1.25rem .75rem;cursor:pointer;text-align:center;transition:all .2s;}
+.emoji-card.sel{border-color:var(--laranja);background:rgba(255,107,53,.08);}
+.emoji-big{font-size:2.75rem;display:block;margin-bottom:.4rem;}
+.emoji-lab{font-size:.8rem;font-weight:600;}
+
+/* ====== MODAL ====== */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:flex-end;justify-content:center;}
+.modal.aberto{display:flex;animation:fadeIn .2s;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-box{background:#fff;border-radius:24px 24px 0 0;padding:2rem;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;animation:slUp .3s ease;}
+@keyframes slUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-box.centro{border-radius:24px;max-width:400px;margin:1rem;}
+.modal-icon{font-size:3.5rem;text-align:center;margin-bottom:.75rem;}
+.modal-h{font-size:1.35rem;font-weight:800;text-align:center;margin-bottom:.3rem;}
+.modal-sub{color:var(--texto2);text-align:center;font-size:.875rem;margin-bottom:1.5rem;}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:1.25rem;}
+.btn-row .btn-primary{margin-bottom:0;}
+
+/* ====== RESPIRAÇÃO ====== */
+.respiracao-arena{text-align:center;padding:1.5rem 0;}
+.resp-circulo{width:180px;height:180px;background:linear-gradient(135deg,var(--laranja),var(--laranja2));border-radius:50%;margin:0 auto 1.5rem;transition:transform 4s ease-in-out, box-shadow 4s ease-in-out;box-shadow:0 8px 30px rgba(255,107,53,.3);}
+.resp-circulo.expandir{transform:scale(1.5);box-shadow:0 16px 50px rgba(255,107,53,.5);}
+.resp-fase{font-size:1.5rem;font-weight:700;margin-bottom:.5rem;}
+.resp-contador{font-size:3.5rem;font-weight:800;color:var(--laranja);}
+.resp-ciclos{color:var(--texto2);font-size:.875rem;margin-top:.5rem;}
+.resp-mensagem{background:#DCFCE7;color:#166534;border-radius:14px;padding:1.25rem;text-align:center;font-weight:700;font-size:1.1rem;display:none;margin-top:1rem;}
+.som-selector{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;margin:.75rem 0;}
+.som-opt{background:var(--bg);border:2px solid var(--borda);border-radius:10px;padding:.6rem;cursor:pointer;text-align:center;font-size:.8rem;font-weight:600;transition:all .2s;}
+.som-opt.sel{border-color:var(--laranja);background:rgba(255,107,53,.08);}
+
+/* ====== AVATAR ====== */
+.avatares{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin:.75rem 0;}
+.avatar-opt{width:100%;aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;cursor:pointer;border:3px solid transparent;transition:all .2s;background:var(--bg);}
+.avatar-opt.sel{border-color:var(--laranja);background:rgba(255,107,53,.1);}
+
+/* ====== SAUDE MENTAL ====== */
+.profissional{background:#fff;border-radius:14px;padding:1rem;margin-bottom:.75rem;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.prof-nome{font-weight:700;font-size:.95rem;}
+.prof-cargo{color:var(--texto2);font-size:.8rem;margin-bottom:.75rem;}
+.btn-wpp{background:var(--verde);color:#fff;border:none;border-radius:10px;padding:.65rem 1rem;font-weight:700;cursor:pointer;width:100%;font-size:.85rem;}
+.emergencia-btn{display:block;width:100%;padding:1rem;border:none;border-radius:12px;font-weight:700;font-size:.9rem;cursor:pointer;margin-bottom:.65rem;text-align:center;}
+.sigilo-box{background:#FFF8E7;border-left:4px solid var(--amarelo);padding:1rem;border-radius:8px;margin-bottom:1rem;font-size:.8rem;}
+
+/* ====== RECOMPENSAS ====== */
+.recomp-pts{text-align:center;padding:1.25rem;background:linear-gradient(135deg,var(--laranja),var(--laranja2));border-radius:14px;color:#fff;margin-bottom:1rem;}
+.recomp-val{font-size:3rem;font-weight:800;}
+.recomp-item{display:flex;align-items:center;gap:.85rem;padding:1rem;background:#fff;border-radius:12px;margin-bottom:.65rem;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.recomp-icon{font-size:2rem;width:50px;text-align:center;}
+.recomp-body{flex:1;}
+.recomp-nome{font-weight:700;}
+.recomp-pts2{font-size:.8rem;color:var(--laranja);font-weight:600;}
+.recomp-status{font-size:.75rem;font-weight:600;}
+
+/* ====== CONQUISTAS ====== */
+.conquista{display:flex;align-items:center;gap:.85rem;padding:1rem;background:#fff;border-radius:12px;margin-bottom:.65rem;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.conq-icon{font-size:2rem;width:50px;text-align:center;}
+.conq-body{flex:1;}
+.conq-nome{font-weight:700;font-size:.9rem;}
+.conq-desc{font-size:.78rem;color:var(--texto2);}
+.conq-prog{background:var(--bg);border-radius:8px;height:8px;margin-top:.4rem;overflow:hidden;}
+.conq-prog-bar{height:100%;background:linear-gradient(90deg,var(--laranja),var(--laranja2));border-radius:8px;transition:width .4s;}
+.conq-pts{font-size:.75rem;color:var(--laranja);font-weight:600;margin-top:.2rem;}
+
+/* ====== DESAFIOS ====== */
+.desafio{background:#fff;border-radius:14px;padding:1.1rem;margin-bottom:.85rem;box-shadow:0 2px 8px rgba(0,0,0,.07);cursor:pointer;transition:transform .15s;}
+.desafio:active{transform:scale(.98);}
+.desafio-topo{display:flex;align-items:flex-start;gap:.85rem;}
+.desafio-icon-wrap{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.75rem;flex-shrink:0;}
+.desafio-nome{font-weight:700;font-size:.95rem;margin-bottom:.2rem;}
+.desafio-desc{font-size:.8rem;color:var(--texto2);}
+.desafio-metas{display:flex;gap:.5rem;margin-top:.65rem;flex-wrap:wrap;}
+.tag{background:var(--bg);border-radius:8px;padding:.2rem .6rem;font-size:.72rem;font-weight:600;color:var(--texto2);}
+.tag-laranja{background:rgba(255,107,53,.12);color:var(--laranja);}
+.tag-verde{background:rgba(34,197,94,.12);color:#166534;}
+.tag-amarelo{background:rgba(245,158,11,.12);color:#92400E;}
+.tag-vermelho{background:rgba(239,68,68,.12);color:#991B1B;}
+
+/* ====== SOBRE ====== */
+.info-dica{background:rgba(255,107,53,.08);border-left:4px solid var(--laranja);padding:.85rem;border-radius:8px;margin-bottom:.85rem;}
+.info-dica-titulo{font-weight:600;color:var(--laranja);font-size:.875rem;margin-bottom:.25rem;}
+.info-dica-txt{font-size:.8rem;color:var(--texto2);}
+
+/* ====== CHECKLIST SINTOMAS ====== */
+.sintoma-check{display:flex;align-items:center;gap:.85rem;padding:.85rem;border:2px solid var(--borda);border-radius:12px;margin-bottom:.5rem;cursor:pointer;transition:border-color .2s;}
+.sintoma-check.sel{border-color:var(--laranja);background:rgba(255,107,53,.05);}
+.sintoma-check input[type=checkbox]{width:20px;height:20px;accent-color:var(--laranja);}
+
+/* ====== INTENSIDADE ====== */
+.intensidade-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;}
+.int-btn{padding:.65rem;border:2px solid var(--borda);border-radius:10px;cursor:pointer;text-align:center;font-size:.8rem;font-weight:600;background:#fff;transition:all .2s;}
+.int-btn.sel{border-color:var(--laranja);background:rgba(255,107,53,.08);}
+
+/* ====== RANKING ====== */
+.podio{display:flex;align-items:flex-end;justify-content:center;gap:1rem;margin:1.25rem 0;}
+.podio-item{text-align:center;flex:1;}
+.podio-avatar{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto .4rem;}
+.podio-nome{font-size:.75rem;font-weight:700;}
+.podio-pts{font-size:.7rem;color:var(--texto2);}
+.podio-posicao{font-size:1.25rem;margin-bottom:.25rem;}
+.rank-item{display:flex;align-items:center;gap:.85rem;padding:.85rem;background:#fff;border-radius:12px;margin-bottom:.5rem;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.rank-pos{font-size:1.25rem;font-weight:800;width:30px;text-align:center;}
+.rank-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;background:var(--bg);}
+.rank-info{flex:1;}
+.rank-nome{font-weight:700;font-size:.9rem;}
+.rank-nivel{font-size:.75rem;color:var(--texto2);}
+.rank-pts{font-weight:800;color:var(--laranja);font-size:.95rem;}
+
+/* ====== PERFIL ====== */
+.perfil-topo{text-align:center;padding:1.25rem;}
+.perfil-avatar{width:90px;height:90px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:3.5rem;margin:0 auto .75rem;border:4px solid var(--laranja);cursor:pointer;transition:transform .2s;}
+.perfil-avatar:active{transform:scale(.95);}
+.perfil-nome{font-size:1.25rem;font-weight:800;}
+.perfil-cargo{color:var(--texto2);font-size:.875rem;}
+
+/* ====== SOBRE APP ====== */
+.sobre-logo{text-align:center;margin-bottom:1.25rem;}
+.sobre-logo-icon{width:80px;height:80px;background:linear-gradient(135deg,var(--laranja),var(--laranja2));border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto .75rem;}
+.sobre-criadora{text-align:center;margin-bottom:1.25rem;}
+.criadora-foto{width:70px;height:70px;background:var(--azul-escuro);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto .5rem;}
+</style>
+</head>
+<body>
+
+<!-- ==================== TELA LOGIN ==================== -->
+<div id="tela-login">
+<div class="login-box">
+  <div class="logo-login">🌱</div>
+  <div class="login-h1">Canteiro Saudável</div>
+  <div class="login-sub">Obra 345 · Canaã dos Carajás · PA</div>
+  <div class="msg-erro" id="msg-login-erro"></div>
+  <div class="msg-ok" id="msg-login-ok"></div>
+
+  <!-- FORM LOGIN -->
+  <div id="form-login">
+    <div class="campo">
+      <label>Matrícula</label>
+      <input type="tel" id="inp-matricula" placeholder="Ex: 34501997" maxlength="8">
+      <div class="hint">💡 Sua matrícula começa com 3450</div>
+    </div>
+    <button class="btn btn-primary" onclick="fazerLogin()">Entrar</button>
+    <button class="btn btn-ghost" onclick="toggleForms('cadastro')">Primeiro acesso? Cadastre-se</button>
+  </div>
+
+  <!-- FORM CADASTRO -->
+  <div id="form-cadastro" class="hidden">
+    <div class="campo"><label>Nome Completo *</label><input type="text" id="cad-nome" placeholder="Seu nome completo"></div>
+    <div class="campo"><label>Matrícula * <small>(começa com 3450)</small></label><input type="tel" id="cad-mat" placeholder="Ex: 34501997" maxlength="8"></div>
+    <div class="campo">
+      <label>Função *</label>
+      <select id="cad-funcao">
+        <option value="">Selecione...</option>
+        <option>Pedreiro</option><option>Servente</option><option>Carpinteiro</option>
+        <option>Armador</option><option>Eletricista</option><option>Encanador</option>
+        <option>Motorista</option><option>Operador de Máquinas</option>
+        <option>Almoxarife</option><option>Outro</option>
+      </select>
+    </div>
+    <div class="campo"><label>Turno *</label>
+      <select id="cad-turno">
+        <option value="">Selecione...</option>
+        <option value="manha">Matutino (6h - 14h)</option>
+        <option value="tarde">Vespertino (14h - 22h)</option>
+        <option value="noite">Noturno (22h - 6h)</option>
+      </select>
+    </div>
+    <div class="campo"><label>Peso (kg) *</label><input type="number" id="cad-peso" placeholder="Ex: 75" min="40" max="200"></div>
+    <div class="campo"><label>Altura (cm) *</label><input type="number" id="cad-altura" placeholder="Ex: 175" min="140" max="220"></div>
+    <div class="campo"><label>Tipo de Trabalho *</label>
+      <select id="cad-trabalho">
+        <option value="">Selecione...</option>
+        <option value="leve">Leve (escritório)</option>
+        <option value="moderado">Moderado (pedreiro, eletricista)</option>
+        <option value="pesado">Pesado (carregador, operador)</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" onclick="fazerCadastro()">Cadastrar</button>
+    <button class="btn btn-ghost" onclick="toggleForms('login')">← Voltar para Login</button>
+  </div>
+</div>
+</div>
+
+<!-- ==================== APP ==================== -->
+<div id="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="h-top">
+      <div class="h-logo">
+        <div class="h-logo-icon">🌱</div>
+        <div class="h-logo-txt"><h1>Canteiro Saudável</h1><p id="h-user-nome">-</p></div>
+      </div>
+      <button class="btn-sair" onclick="sair()">Sair</button>
+    </div>
+    <div class="h-greeting" id="h-saudacao">Bom dia!</div>
+    <div class="h-sub">Como você está se sentindo hoje?</div>
+    <div class="h-badge">Mat: <span id="h-matricula">-</span></div>
+  </div>
+
+  <!-- CONTEUDO -->
+  <!-- HOME -->
+  <div class="pagina ativa" id="pag-home">
+    <div class="stats-3">
+      <div class="stat"><div class="stat-val" id="s-checkins">0</div><div class="stat-lab">Check-ins</div></div>
+      <div class="stat"><div class="stat-val" id="s-pontos">0</div><div class="stat-lab">Pontos</div></div>
+      <div class="stat"><div class="stat-val" id="s-seq">0🔥</div><div class="stat-lab">Sequência</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-titulo">✅ Check-in Rápido</div>
+      <div class="emoji-row">
+        <div class="emoji-card" onclick="abrirCheckin('bem')"><span class="emoji-big">😊</span><div class="emoji-lab">Tudo bem</div></div>
+        <div class="emoji-card" onclick="abrirCheckin('leve')"><span class="emoji-big">😐</span><div class="emoji-lab">Com dor leve</div></div>
+        <div class="emoji-card" onclick="abrirCheckin('forte')"><span class="emoji-big">😞</span><div class="emoji-lab">Com dor forte</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-titulo">🏆 Conquistas & Prêmios</div>
+      <div class="item" onclick="irPagina('pag-ranking')"><div class="item-icon">🏆</div><div class="item-body"><div class="item-title">Ranking</div><div class="item-sub">Veja sua posição</div></div><div class="item-arrow">›</div></div>
+      <div class="item" onclick="irPagina('pag-conquistas')"><div class="item-icon">🎖️</div><div class="item-body"><div class="item-title">Conquistas</div><div class="item-sub">Desbloqueie medalhas</div></div><div class="item-arrow">›</div></div>
+      <div class="item" onclick="irPagina('pag-recompensas')"><div class="item-icon">🎁</div><div class="item-body"><div class="item-title">Recompensas</div><div class="item-sub">Resgate prêmios</div></div><div class="item-arrow">›</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-titulo">📊 Resumo da Semana</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;text-align:center;">
+        <div style="background:rgba(59,130,246,.08);border-radius:12px;padding:.85rem;"><div style="font-size:1.5rem;font-weight:700;" id="rsum-ci">0</div><div style="font-size:.7rem;color:var(--texto2);">Check-ins</div></div>
+        <div style="background:rgba(34,197,94,.08);border-radius:12px;padding:.85rem;"><div style="font-size:1.5rem;font-weight:700;" id="rsum-agua">0</div><div style="font-size:.7rem;color:var(--texto2);">Hidratação</div></div>
+        <div style="background:rgba(245,158,11,.08);border-radius:12px;padding:.85rem;"><div style="font-size:1.5rem;font-weight:700;" id="rsum-desat">0</div><div style="font-size:.7rem;color:var(--texto2);">Desafios</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-titulo">⚡ Ações Rápidas</div>
+      <button class="btn btn-azul btn-full" style="margin-bottom:.65rem" onclick="irPagina('pag-saude');setTimeout(()=>abrirModalPressao(),400)">+ Registrar Pressão Arterial</button>
+      <button class="btn" style="background:rgba(255,107,53,.1);color:var(--laranja);margin-bottom:0" onclick="irPagina('pag-ergonomia')">🧘 Ergonomia e Alongamentos</button>
+    </div>
+
+    <div class="info-dica"><div class="info-dica-titulo">💡 Dica do Dia</div><div class="info-dica-txt" id="dica-dia">Faça uma pausa a cada 2 horas para alongar os ombros e costas. Isso reduz o risco de doenças musculoesqueléticas.</div></div>
+  </div>
+
+  <!-- HIDRATAÇÃO -->
+  <div class="pagina" id="pag-hidratacao">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;">
+        <div class="card-titulo" style="margin:0">💧 Seu Perfil</div>
+        <button onclick="abrirModalEditarPerfil()" style="background:none;border:none;color:var(--laranja);font-weight:600;cursor:pointer;font-size:.875rem">Editar</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;text-align:center;">
+        <div><div style="color:var(--texto2);font-size:.78rem;">Peso</div><div style="font-weight:700;" id="h-peso">-</div></div>
+        <div><div style="color:var(--texto2);font-size:.78rem;">Altura</div><div style="font-weight:700;" id="h-altura">-</div></div>
+        <div><div style="color:var(--texto2);font-size:.78rem;">Trabalho</div><div style="font-weight:700;" id="h-trabalho">-</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-titulo">💧 Meta Diária</div>
+      <div style="text-align:center;margin-bottom:.75rem;">
+        <div style="font-size:2.5rem;margin-bottom:.25rem;">💧</div>
+        <div style="font-size:2rem;font-weight:800;color:var(--laranja);" id="agua-consumida">0ml</div>
+        <div style="color:var(--texto2);font-size:.875rem;">de <span id="agua-meta">-</span>ml</div>
+        <div style="color:var(--texto2);font-size:.8rem;margin-top:.25rem;">Faltam <span id="agua-faltam">-</span> copos (150ml)</div>
+      </div>
+      <div class="barra-wrap"><div class="barra" id="agua-barra" style="width:0%"></div><div class="barra-txt" id="agua-pct">0%</div></div>
+      <div class="agua-grid">
+        <button class="agua-btn" onclick="addAgua(150)"><span class="agua-icon">🥤</span>1 Copo (150ml)</button>
+        <button class="agua-btn" onclick="addAgua(300)"><span class="agua-icon">🥤🥤</span>2 Copos (300ml)</button>
+        <button class="agua-btn" onclick="addAgua(450)"><span class="agua-icon">🥤🥤🥤</span>3 Copos (450ml)</button>
+        <button class="agua-btn" onclick="addAgua(1000)"><span class="agua-icon">🧴</span>1 Garrafa (1L)</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-titulo">🚨 Medidor de Hidratação</div>
+      <p style="font-size:.8rem;color:var(--texto2);margin-bottom:.85rem;">Compare a cor da sua urina com a escala abaixo:</p>
+      <div id="escala-urina"></div>
+      <div class="info-dica" style="margin-top:.75rem;"><div class="info-dica-titulo">💡 Dica</div><div class="info-dica-txt">Urina clara (amarelo claro) indica boa hidratação. Urina escura é sinal de desidratação.</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-titulo">📋 Histórico de Hoje</div>
+      <div id="agua-historico"><div style="text-align:center;color:var(--texto2);padding:1.5rem;">Nenhum registro ainda</div></div>
+    </div>
+  </div>
+
+  <!-- ERGONOMIA -->
+  <div class="pagina" id="pag-ergonomia">
+    <div style="display:flex;gap:.5rem;margin-bottom:1rem;">
+      <button class="som-opt sel" id="tab-along" onclick="trocarTabErgo('along')">Alongamentos</button>
+      <button class="som-opt" id="tab-post" onclick="trocarTabErgo('post')">Posturas</button>
+      <button class="som-opt" id="tab-resp" onclick="trocarTabErgo('resp')">Respiração</button>
+    </div>
+    <div id="ergo-along"></div>
+    <div id="ergo-post" class="hidden"></div>
+    <div id="ergo-resp" class="hidden"></div>
+  </div>
+
+  <!-- SAUDE -->
+  <div class="pagina" id="pag-saude">
+    <div class="card">
+      <div class="card-titulo">❤️ Pressão Arterial</div>
+      <div id="ultima-pressao" style="margin-bottom:1rem;color:var(--texto2);font-size:.875rem;">Nenhuma leitura registrada ainda.</div>
+      <button class="btn btn-primary btn-full" onclick="abrirModalPressao()">+ Registrar Pressão</button>
+    </div>
+
+    <div class="card">
+      <div class="card-titulo">🩺 Sintomas</div>
+      <p style="font-size:.8rem;color:var(--texto2);margin-bottom:.75rem;">Selecione os sintomas que está sentindo:</p>
+      <div id="lista-sintomas"></div>
+      <div style="margin-top:.85rem;">
+        <div class="campo" style="margin-bottom:.75rem;"><label style="font-size:.8rem;font-weight:600;">Intensidade</label><div class="intensidade-row"><button class="int-btn" onclick="selInt(this,'leve')">Leve</button><button class="int-btn" onclick="selInt(this,'moderada')">Moderada</button><button class="int-btn" onclick="selInt(this,'forte')">Forte</button></div></div>
+        <div class="campo"><label style="font-size:.8rem;font-weight:600;">Descreva o que está sentindo:</label><textarea id="sint-descricao" class="campo input" style="width:100%;padding:.75rem;border:2px solid var(--borda);border-radius:10px;font-family:inherit;font-size:.875rem;resize:none;" rows="3" placeholder="Ex: Dor ao abaixar, começou hoje de manhã..."></textarea></div>
+        <button class="btn btn-primary" onclick="enviarSintomas()">Enviar Relato</button>
+      </div>
+    </div>
+
+    <div class="card" style="background:rgba(30,106,141,.05);border:1px solid rgba(30,106,141,.2);">
+      <div class="card-titulo">🧠 Saúde Mental</div>
+      <p style="font-size:.8rem;color:var(--texto2);margin-bottom:.85rem;">Respire profundamente. Inspire por 4 segundos, segure por 4 segundos, e expire por 4 segundos. Repita 5 vezes.</p>
+      <button class="btn btn-azul" onclick="irPagina('pag-saude-mental')">Acessar Recursos de Saúde Mental</button>
+    </div>
+  </div>
+
+  <!-- PERFIL -->
+  <div class="pagina" id="pag-perfil">
+    <div class="card">
+      <div class="perfil-topo">
+        <div class="perfil-avatar" onclick="abrirModalAvatar()" id="avatar-display">👷</div>
+        <div style="font-size:.75rem;color:var(--laranja);margin-bottom:.75rem;">Toque para alterar avatar</div>
+        <div class="perfil-nome" id="p-nome">-</div>
+        <div class="perfil-cargo" id="p-cargo">-</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:.75rem;">
+        <div style="background:var(--bg);border-radius:12px;padding:.85rem;"><div style="font-size:.72rem;color:var(--texto2);">Matrícula</div><div style="font-weight:700;" id="p-mat">-</div></div>
+        <div style="background:var(--bg);border-radius:12px;padding:.85rem;"><div style="font-size:.72rem;color:var(--texto2);">Turno</div><div style="font-weight:700;" id="p-turno">-</div></div>
+        <div style="background:var(--bg);border-radius:12px;padding:.85rem;"><div style="font-size:.72rem;color:var(--texto2);">Função</div><div style="font-weight:700;" id="p-funcao">-</div></div>
+        <div style="background:var(--bg);border-radius:12px;padding:.85rem;"><div style="font-size:.72rem;color:var(--texto2);">Obra</div><div style="font-weight:700;">345</div></div>
+      </div>
+    </div>
+
+    <div class="card"><div class="card-titulo">💙 Saúde Mental</div><p style="font-size:.8rem;color:var(--texto2);margin-bottom:.85rem;">Acesse recursos de apoio emocional e profissionais disponíveis</p><button class="btn btn-azul" onclick="irPagina('pag-saude-mental')">Acessar Recursos</button></div>
+
+    <div class="card"><div class="card-titulo">📞 Contato SESMT</div>
+      <div class="item" onclick="window.open('tel:+5521998225493')"><div class="item-icon">📞</div><div class="item-body"><div class="item-title">Ligar para SESMT</div><div class="item-sub">(21) 99822-5493</div></div><div class="item-arrow">›</div></div>
+      <div class="item" onclick="window.open('https://wa.me/5521998225493','_blank')"><div class="item-icon">💬</div><div class="item-body"><div class="item-title">WhatsApp SESMT</div><div class="item-sub">Saúde Ocupacional</div></div><div class="item-arrow">›</div></div>
+    </div>
+
+    <div class="card"><div class="card-titulo">⚙️ Configurações</div>
+      <div class="item" onclick="irPagina('pag-sobre')"><div class="item-icon">ℹ️</div><div class="item-body"><div class="item-title">Sobre o App</div><div class="item-sub">Versão 1.0 · Obra 345</div></div><div class="item-arrow">›</div></div>
+    </div>
+  </div>
+
+  <!-- SAÚDE MENTAL -->
+  <div class="pagina" id="pag-saude-mental">
+    <button onclick="voltarPagina()" style="background:none;border:none;color:var(--laranja);font-weight:600;cursor:pointer;margin-bottom:1rem;font-size:.9rem;">← Voltar</button>
+    <div class="card-titulo" style="margin-bottom:.25rem;">💙 Saúde Mental</div>
+    <p style="color:var(--texto2);font-size:.875rem;margin-bottom:1.25rem;">Você não está sozinho. Aqui estão recursos para te ajudar.</p>
+
+    <div class="sigilo-box"><strong style="color:var(--amarelo);">🔒 Sigilo Profissional</strong><br>Todos os atendimentos psicológicos e de assistência social são protegidos por <strong>sigilo profissional garantido por lei</strong>. Suas informações são confidenciais e não serão compartilhadas sem sua autorização.</div>
+
+    <div class="card"><div class="card-titulo">👥 Profissionais da Obra</div>
+      <div class="profissional"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem;"><div style="font-size:2rem;">🧠</div><div><div class="prof-nome">Psicóloga/Analista - Brenda</div><div class="prof-cargo">Atendimento presencial na obra ou teleconsulta</div><div style="font-size:.8rem;color:var(--texto2);">📱 (31) 99589-2351</div></div></div><button class="btn-wpp" onclick="window.open('https://wa.me/5531995892351?text=Olá Brenda, gostaria de agendar um atendimento','_blank')">💬 Agendar via WhatsApp</button></div>
+      <div class="profissional"><div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem;"><div style="font-size:2rem;">🤝</div><div><div class="prof-nome">Assistente Social - Luciana</div><div class="prof-cargo">Orientação e apoio em questões sociais</div><div style="font-size:.8rem;color:var(--texto2);">📱 (31) 99589-2351</div></div></div><button class="btn-wpp" onclick="window.open('https://wa.me/5531995892351?text=Olá Luciana, gostaria de atendimento','_blank')">💬 Agendar via WhatsApp</button></div>
+    </div>
+
+    <div class="card"><div class="card-titulo">🚨 Recursos de Emergência</div>
+      <button class="emergencia-btn" style="background:var(--vermelho);color:#fff;" onclick="window.open('tel:188')">📞 CVV - 188 (Gratuito)<br><small>Apoio emocional 24h · Ligue ou chat online</small></button>
+      <button class="emergencia-btn" style="background:var(--azul-escuro);color:#fff;" onclick="window.open('tel:192')">🏥 CAPS - Canaã dos Carajás<br><small>Centro de Atenção Psicossocial</small></button>
+    </div>
+
+    <div class="card"><div class="card-titulo">📚 Guias de Apoio</div>
+      <div style="margin-bottom:1rem;"><div style="font-weight:700;margin-bottom:.5rem;">🌬️ Técnica de Respiração 4-7-8</div><ol style="padding-left:1.25rem;font-size:.875rem;color:var(--texto2);"><li style="margin-bottom:.25rem;">Inspire pelo nariz por 4 segundos</li><li style="margin-bottom:.25rem;">Segure a respiração por 7 segundos</li><li style="margin-bottom:.25rem;">Expire pela boca por 8 segundos</li><li>Repita 3-4 vezes</li></ol></div>
+      <div style="margin-bottom:1rem;"><div style="font-weight:700;margin-bottom:.5rem;">⚠️ Quando Procurar Ajuda</div><div style="font-size:.8rem;color:var(--texto2);">• Sentimentos de tristeza ou ansiedade persistentes<br>• Dificuldade para dormir ou concentrar<br>• Perda de interesse em atividades<br>• Pensamentos negativos recorrentes<br>• Mudanças no apetite ou peso<br>• Isolamento social</div></div>
+      <div><div style="font-weight:700;margin-bottom:.5rem;">🌟 Dicas para o Dia a Dia</div><div style="font-size:.8rem;color:var(--texto2);">• Converse com alguém de confiança<br>• Pratique atividades físicas regularmente<br>• Mantenha uma rotina de sono<br>• Evite álcool e drogas<br>• Faça pausas durante o trabalho<br>• Busque momentos de lazer</div></div>
+    </div>
+
+    <div class="info-dica"><div class="info-dica-titulo">💚 Lembre-se</div><div class="info-dica-txt">Cuidar da saúde mental é tão importante quanto cuidar da saúde física. Não hesite em buscar ajuda quando precisar. Você merece se sentir bem!</div></div>
+  </div>
+
+  <!-- DESAFIOS -->
+  <div class="pagina" id="pag-desafios">
+    <div class="card"><div class="card-titulo">🎯 Como Funciona</div><p style="font-size:.8rem;color:var(--texto2);">Escolha um desafio, siga o guia personalizado e registre seu progresso diariamente. Tire fotos como comprovação e ganhe pontos ao completar!</p></div>
+    <div id="lista-desafios"></div>
+  </div>
+
+  <!-- RANKING -->
+  <div class="pagina" id="pag-ranking">
+    <button onclick="voltarPagina()" style="background:none;border:none;color:var(--laranja);font-weight:600;cursor:pointer;margin-bottom:1rem;">← Voltar</button>
+    <div style="display:flex;gap:.75rem;margin-bottom:1.25rem;">
+      <button class="som-opt sel" id="rank-sem" onclick="trocarRank('semanal')">Semanal</button>
+      <button class="som-opt" id="rank-men" onclick="trocarRank('mensal')">Mensal</button>
+    </div>
+    <div class="card"><div class="card-titulo">🏅 Pódio</div><div class="podio" id="podio-display"></div></div>
+    <div class="card"><div class="card-titulo">📊 Classificação Completa</div><div id="rank-lista"></div></div>
+  </div>
+
+  <!-- CONQUISTAS -->
+  <div class="pagina" id="pag-conquistas">
+    <button onclick="voltarPagina()" style="background:none;border:none;color:var(--laranja);font-weight:600;cursor:pointer;margin-bottom:1rem;">← Voltar</button>
+    <div class="card"><div style="display:flex;justify-content:space-between;"><span class="card-titulo">🏆 Conquistas</span><span style="color:var(--laranja);font-weight:700;" id="conq-total">0%</span></div><div style="font-size:.8rem;color:var(--texto2);margin-bottom:.5rem;" id="conq-sub">0 de 14 conquistas</div></div>
+    <div id="lista-conquistas"></div>
+  </div>
+
+  <!-- RECOMPENSAS -->
+  <div class="pagina" id="pag-recompensas">
+    <button onclick="voltarPagina()" style="background:none;border:none;color:var(--laranja);font-weight:600;cursor:pointer;margin-bottom:1rem;">← Voltar</button>
+    <div class="recomp-pts"><div style="font-size:.875rem;opacity:.9;margin-bottom:.25rem;">Seus Pontos Disponíveis</div><div class="recomp-val" id="recomp-pts-val">0</div><button onclick="irPagina('pag-resgates')" style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:.4rem 1rem;border-radius:8px;font-weight:600;cursor:pointer;margin-top:.5rem;font-size:.8rem;">Meus Resgates</button></div>
+    <div style="display:flex;gap:.5rem;margin-bottom:1rem;" id="recomp-filtros">
+      <button class="som-opt sel" onclick="filtrarRecompensa('todos',this)">🎁 Todos</button>
+      <button class="som-opt" onclick="filtrarRecompensa('reconhecimento',this)">🏅 Reconhecimento</button>
+      <button class="som-opt" onclick="filtrarRecompensa('brindes',this)">🎒 Brindes</button>
+    </div>
+    <div id="lista-recompensas"></div>
+  </div>
+
+  <!-- SOBRE -->
+  <div class="pagina" id="pag-sobre">
+    <button onclick="voltarPagina()" style="background:none;border:none;color:var(--laranja);font-weight:600;cursor:pointer;margin-bottom:1rem;">← Voltar</button>
+    <div class="card">
+      <div class="sobre-logo"><div class="sobre-logo-icon">🌱</div><div style="font-size:1.25rem;font-weight:800;">Canteiro Saudável</div><div style="color:var(--texto2);font-size:.875rem;">Versão 1.0.0</div></div>
+      <div class="sobre-criadora"><div class="criadora-foto">👩‍⚕️</div><div style="font-weight:700;font-size:1.1rem;">Denise Alves da Silva</div><div style="color:var(--laranja);font-size:.875rem;font-weight:600;">Técnica de Enfermagem do Trabalho</div><div style="color:var(--texto2);font-size:.8rem;">Criadora e Idealizadora</div></div>
+      <div style="font-size:.875rem;color:var(--texto2);text-align:center;line-height:1.6;">O <strong>Canteiro Saudável</strong> foi desenvolvido com dedicação e expertise em saúde ocupacional, visando promover o bem-estar e a segurança dos trabalhadores da construção civil, mineração e indústria.</div>
+    </div>
+    <div class="card" style="border:2px solid var(--azul-escuro);">
+      <div style="text-align:center;"><div style="font-size:3rem;margin-bottom:.5rem;">©️</div><div style="font-weight:800;color:var(--azul-escuro);">PROPRIEDADE INTELECTUAL PROTEGIDA</div><div style="font-size:.75rem;color:var(--texto2);margin-top:.5rem;">© 2026 Denise Alves da Silva. Todos os direitos reservados.</div></div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav">
+    <button class="nav-btn ativo" onclick="irPagina('pag-home')"><div class="nav-icon">🏠</div><div>Home</div></button>
+    <button class="nav-btn" onclick="irPagina('pag-hidratacao')"><div class="nav-icon">💧</div><div>Hidratação</div></button>
+    <button class="nav-btn" onclick="irPagina('pag-ergonomia')"><div class="nav-icon">🤸</div><div>Ergonomia</div></button>
+    <button class="nav-btn" onclick="irPagina('pag-saude')"><div class="nav-icon">❤️</div><div>Saúde</div></button>
+    <button class="nav-btn" onclick="irPagina('pag-perfil')"><div class="nav-icon">👤</div><div>Perfil</div></button>
+  </div>
+</div>
+
+<!-- ==================== MODAIS ==================== -->
+<!-- Modal Check-in -->
+<div class="modal" id="modal-checkin">
+<div class="modal-box">
+  <div class="modal-icon" id="ci-icon">😊</div>
+  <div class="modal-h" id="ci-h">Como você está?</div>
+  <div class="modal-sub" id="ci-sub">Faça seu check-in do dia</div>
+  <div class="msg-ok" id="ci-ok">✅ Check-in registrado! +10 pontos 🎉</div>
+  <div id="ci-form-dor" class="hidden">
+    <div class="campo"><label style="font-size:.875rem;font-weight:600;">Onde está a dor?</label><select id="ci-local"><option value="">Selecione...</option><option>Dor nas costas</option><option>Dor no ombro</option><option>Dor no joelho</option><option>Dor de cabeça</option><option>Ansiedade</option><option>Fadiga</option><option>Outro</option></select></div>
+    <div class="campo"><label style="font-size:.875rem;font-weight:600;">Intensidade</label><div class="intensidade-row"><button class="int-btn" onclick="selIntCheckin(this,'leve')">Leve</button><button class="int-btn" onclick="selIntCheckin(this,'moderada')">Moderada</button><button class="int-btn" onclick="selIntCheckin(this,'forte')">Forte</button></div></div>
+    <div class="campo"><label style="font-size:.875rem;font-weight:600;">Descreva:</label><textarea id="ci-descricao" style="width:100%;padding:.75rem;border:2px solid var(--borda);border-radius:10px;font-family:inherit;font-size:.875rem;resize:none;" rows="3" placeholder="Ex: Dor ao abaixar, formigamento..."></textarea></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="fecharModal('modal-checkin')">Cancelar</button>
+    <button class="btn btn-primary" style="margin:0" onclick="confirmarCheckin()">Confirmar</button>
+  </div>
+</div>
+</div>
+
+<!-- Modal Pressão -->
+<div class="modal" id="modal-pressao">
+<div class="modal-box centro">
+  <div class="modal-icon">❤️</div>
+  <div class="modal-h">Pressão Arterial</div>
+  <div class="modal-sub">Registre sua medição atual</div>
+  <div class="msg-ok" id="press-ok">✅ Pressão registrada! +5 pontos</div>
+  <div class="msg-erro" id="press-erro"></div>
+  <div class="campo"><label>Sistólica (máxima)</label><input type="number" id="p-sistolica" placeholder="Ex: 120" min="80" max="200"></div>
+  <div class="campo"><label>Diastólica (mínima)</label><input type="number" id="p-diastolica" placeholder="Ex: 80" min="40" max="130"></div>
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="fecharModal('modal-pressao')">Cancelar</button>
+    <button class="btn btn-primary" style="margin:0" onclick="registrarPressao()">Registrar</button>
+  </div>
+</div>
+</div>
+
+<!-- Modal Respiração -->
+<div class="modal" id="modal-respiracao">
+<div class="modal-box centro">
+  <div class="modal-h">🧘 Respiração Guiada</div>
+  <div class="modal-sub" id="resp-tempo-total"></div>
+  <div class="respiracao-arena">
+    <div id="resp-circulo" class="resp-circulo"></div>
+    <div class="resp-fase" id="resp-fase">Prepare-se...</div>
+    <div class="resp-contador" id="resp-contador">-</div>
+    <div class="resp-ciclos" id="resp-ciclos">Ciclo 0 de 5</div>
+  </div>
+  <div class="resp-mensagem" id="resp-msg-fim"></div>
+  <button class="btn btn-ghost btn-full" onclick="pararRespiracao()">⏹ Parar</button>
+</div>
+</div>
+
+<!-- Modal Avatar -->
+<div class="modal" id="modal-avatar">
+<div class="modal-box centro">
+  <div class="modal-h">Escolha seu Avatar</div>
+  <div class="modal-sub">Toque para selecionar</div>
+  <div class="avatares" id="grade-avatares"></div>
+  <button class="btn btn-primary btn-full" onclick="salvarAvatar()">Salvar</button>
+</div>
+</div>
+
+<!-- Modal Desafio Detalhes -->
+<div class="modal" id="modal-desafio">
+<div class="modal-box">
+  <button onclick="fecharModal('modal-desafio')" style="background:none;border:none;color:var(--laranja);font-weight:600;cursor:pointer;margin-bottom:1rem;">← Voltar</button>
+  <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
+    <div id="md-icon-wrap" style="width:60px;height:60px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:2rem;"></div>
+    <div><div id="md-dif" style="font-size:.75rem;font-weight:700;margin-bottom:.25rem;"></div><div id="md-nome" style="font-size:1.1rem;font-weight:800;"></div></div>
+  </div>
+  <p id="md-desc" style="color:var(--texto2);font-size:.875rem;margin-bottom:1rem;"></p>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1.25rem;" id="md-stats"></div>
+  
+  <!-- Tabs desafio -->
+  <div style="display:flex;gap:.5rem;margin-bottom:1rem;" id="md-tabs">
+    <button class="som-opt sel" onclick="trocarTabDesafio('guia',this)">📋 Guia</button>
+    <button class="som-opt" onclick="trocarTabDesafio('progresso',this)">📅 Progresso</button>
+    <button class="som-opt" onclick="trocarTabDesafio('fotos',this)">📸 Fotos</button>
+    <button class="som-opt" onclick="trocarTabDesafio('dificuldade',this)">⚠️ Dificuldade</button>
+  </div>
+  
+  <div id="md-tab-guia"></div>
+  <div id="md-tab-progresso" class="hidden"></div>
+  <div id="md-tab-fotos" class="hidden"><div style="margin-bottom:1rem;"><div style="font-weight:700;margin-bottom:.5rem;">📸 Adicionar Foto</div><p style="font-size:.8rem;color:var(--texto2);margin-bottom:.75rem;">Tire fotos como comprovação: pesagens, refeições, atividades realizadas</p><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin-bottom:.75rem;" id="foto-cats"></div><div class="campo"><label style="font-size:.8rem;">Descrição (opcional):</label><input type="text" id="foto-desc" placeholder="Ex: Pesagem após treino..."></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;"><button class="btn btn-azul" onclick="simularFoto()">📷 Tirar Foto</button><button class="btn btn-ghost" onclick="simularFoto()">🖼️ Galeria</button></div></div><div id="fotos-lista"><div style="text-align:center;color:var(--texto2);padding:1.5rem;font-size:.875rem;">Nenhuma foto adicionada ainda.</div></div></div>
+  <div id="md-tab-dificuldade" class="hidden"><div style="background:#FEF3C7;border-radius:12px;padding:1rem;margin-bottom:1rem;"><div style="font-weight:700;color:var(--amarelo);margin-bottom:.5rem;">⚠️ Relatar Dificuldade</div><p style="font-size:.8rem;color:var(--texto2);">Está tendo dificuldades? Conte para nós. A equipe de saúde pode ajudar!</p></div><div class="campo"><textarea id="dif-texto" style="width:100%;padding:.75rem;border:2px solid var(--borda);border-radius:10px;font-family:inherit;resize:none;" rows="4" placeholder="Descreva sua dificuldade..."></textarea></div><button class="btn btn-amarelo btn-full" onclick="enviarDificuldade()" style="margin-bottom:1rem;">📝 Registrar Dificuldade</button><div style="background:rgba(59,130,246,.08);border-radius:12px;padding:1rem;"><div style="font-weight:700;color:var(--azul);margin-bottom:.5rem;">🤝 Precisa de Apoio?</div><div style="font-size:.8rem;color:var(--texto2);">• Agendar consulta com nutricionista<br>• Orientação sobre exercícios<br>• Acompanhamento personalizado<br>• Suporte psicológico se necessário</div></div></div>
+  
+  <div style="margin-top:1rem;" id="md-btn-iniciar"></div>
+</div>
+</div>
+
+<script>
+// ============================================================
+// DADOS E ESTADO
+// ============================================================
+let usuario = null;
+let avatarSelecionado = '👷';
+let avatarTemp = '👷';
+let moodAtual = null;
+let intensidadeAtual = null;
+let sintomasSel = [];
+let intSintoma = null;
+let breathTimer = null;
+let breathPhase = 0;
+let breathCycle = 0;
+let breathCount = 0;
+let breathTotalCycles = 5;
+let breathTimeouts = [];
+let ergoTabAtual = 'along';
+let paginaAnterior = 'pag-home';
+let somSelecionado = 'chuva';
+let desafioAtual = null;
+let fotoCatSel = 'atividade';
+let audioNode = null;
+let audioCtx = null;
+
+const AVATARES = ['👷','👷‍♀️','🧑‍🔧','👩‍🔧','🧑‍💼','👩‍💼','🦺','⛑️','🧑‍🏭','👩‍🏭','🏋️','🏋️‍♀️','💪','🌟'];
+
+const DESAFIOS = [
+  {id:1,icon:'💧',cor:'#3B82F6',nome:'Hidratação Consistente',desc:'Beba pelo menos 2 litros de água por dia durante 7 dias',duracao:7,pontos:300,dificuldade:'Fácil',meta:'2L/dia',como:['Beba um copo ao acordar','Mantenha garrafa sempre por perto','Beba antes de sentir sede','Use o app para registrar'],dicas:'Use um pedômetro ou app para contar passos'},
+  {id:2,icon:'🚶',cor:'#F59E0B',nome:'Caminhada Saudável',desc:'Caminhe 6.000 passos por dia durante 15 dias consecutivos',duracao:15,pontos:500,dificuldade:'Médio',meta:'6000 passos/dia',como:['Comece com caminhada de 10 min pela manhã','Use as escadas ao invés do elevador','Caminhe durante o intervalo do almoço','Estacione mais longe do destino'],dicas:'Convide um colega para caminhar junto'},
+  {id:3,icon:'✅',cor:'#22C55E',nome:'Check-in Diário',desc:'Faça check-in de bem-estar todos os dias por 30 dias',duracao:30,pontos:800,dificuldade:'Médio',meta:'1 check-in/dia',como:['Abra o app ao chegar na obra','Selecione como se sente','Relate sintomas se houver','Mantenha a sequência!'],dicas:'Configure um lembrete para não esquecer'},
+  {id:4,icon:'💧',cor:'#06B6D4',nome:'Mestre da Hidratação',desc:'Mantenha-se hidratado por 30 dias seguidos (meta diária)',duracao:30,pontos:1000,dificuldade:'Difícil',meta:'Meta/dia x 30 dias',como:['Calcule sua meta personalizada','Registre cada copo no app','Monitore cor da urina','Evite esperar a sede'],dicas:'Urina clara = bem hidratado!'},
+];
+
+const RECOMPENSAS = [
+  {id:1,cat:'reconhecimento',icon:'📜',nome:'Certificado Digital',pts:100,desc:'Certificado de participação em saúde ocupacional'},
+  {id:2,cat:'reconhecimento',icon:'📸',nome:'Foto no Mural da Obra',pts:150,desc:'Sua foto no mural de destaque'},
+  {id:3,cat:'reconhecimento',icon:'⭐',nome:'Menção Honrosa em Reunião',pts:200,desc:'Reconhecimento em reunião de equipe'},
+  {id:4,cat:'reconhecimento',icon:'🎖️',nome:'Badge Guardião da Saúde',pts:300,desc:'Badge digital exclusivo'},
+  {id:5,cat:'brindes',icon:'🧢',nome:'Boné 65 MIP',pts:600,desc:'Boné personalizado com logo da empresa'},
+  {id:6,cat:'brindes',icon:'👕',nome:'Camiseta da Obra',pts:700,desc:'Camiseta personalizada Canteiro Saudável'},
+  {id:7,cat:'brindes',icon:'🧴',nome:'Garrafa Térmica',pts:800,desc:'Garrafa para manter sua hidratação'},
+];
+
+const CONQUISTAS = [
+  {id:1,cat:'Hidratação',icon:'💧',nome:'Hidratação Iniciante',desc:'Registre 10 copos de água',total:10,chave:'agua_total',pts:50},
+  {id:2,cat:'Hidratação',icon:'💧💧',nome:'Hidratação Intermediária',desc:'Registre 50 copos de água',total:50,chave:'agua_total',pts:100},
+  {id:3,cat:'Hidratação',icon:'🌊',nome:'Mestre da Hidratação',desc:'Registre 100 copos de água',total:100,chave:'agua_total',pts:200},
+  {id:4,cat:'Check-in',icon:'📋',nome:'Primeira Semana',desc:'Faça check-in por 7 dias seguidos',total:7,chave:'seq_max',pts:100},
+  {id:5,cat:'Check-in',icon:'🔥',nome:'Em Chamas!',desc:'Faça check-in por 14 dias seguidos',total:14,chave:'seq_max',pts:200},
+  {id:6,cat:'Check-in',icon:'🏆',nome:'Guardião da Saúde',desc:'Faça check-in por 30 dias seguidos',total:30,chave:'seq_max',pts:500},
+  {id:7,cat:'Respiração',icon:'🧘',nome:'Fôlego Novo',desc:'Complete 5 sessões de respiração',total:5,chave:'resp_total',pts:50},
+  {id:8,cat:'Respiração',icon:'🧘‍♂️',nome:'Mestre do Fôlego',desc:'Complete 30 sessões de respiração',total:30,chave:'resp_total',pts:200},
+];
+
+const ERGONOMIA_ALONG = [
+  {icon:'🧠',nome:'Alongamento de Pescoço',desc:'Alivie a tensão no pescoço com este alongamento simples',tempo:60,dif:'fácil',fases:[{lado:'Lado Direito',instrucao:'Incline a cabeça para o lado direito',segundos:30},{lado:'Lado Esquerdo',instrucao:'Incline a cabeça para o lado esquerdo',segundos:30}],instrucoes:['Sente-se ou fique em pé com a coluna reta','Incline lentamente a cabeça para o lado direito','Sinta o alongamento no lado esquerdo do pescoço','Mantenha a posição sem forçar'],beneficios:['Reduz tensão','Melhora flexibilidade','Alivia dor de cabeça']},
+  {icon:'💪',nome:'Rotação de Ombros',desc:'Melhore a mobilidade dos ombros com rotações',tempo:60,dif:'fácil',fases:[{lado:'Rotação para frente',instrucao:'Faça rotações dos ombros para frente',segundos:30},{lado:'Rotação para trás',instrucao:'Faça rotações dos ombros para trás',segundos:30}],instrucoes:['Fique em pé com os pés afastados','Eleve os ombros até as orelhas','Faça rotações lentas para frente','Depois para trás'],beneficios:['Alivia tensão','Melhora mobilidade','Previne LER']},
+  {icon:'🔙',nome:'Alongamento de Costas',desc:'Alongue as costas e alivie a tensão',tempo:45,dif:'fácil',fases:[{lado:'Inclinação lateral',instrucao:'Incline o corpo para o lado direito',segundos:22},{lado:'Outro lado',instrucao:'Incline o corpo para o lado esquerdo',segundos:23}],instrucoes:['Fique em pé com pés afastados','Eleve um braço e incline lateralmente','Mantenha a posição por alguns segundos','Repita do outro lado'],beneficios:['Alivia dor lombar','Melhora postura','Aumenta flexibilidade']},
+];
+
+const ERGONOMIA_POST = [
+  {icon:'📦',nome:'Postura Correta para Carregar',desc:'Aprenda a forma correta de carregar objetos pesados',tempo:60,dif:'médio',instrucoes:['Fique em pé com os pés afastados na largura dos ombros','Dobre os joelhos, não a cintura','Mantenha a coluna reta','Levante o objeto usando as pernas','Mantenha o objeto próximo ao corpo'],beneficios:['Previne dor lombar','Evita lesões','Protege a coluna']},
+];
+
+const DICAS = [
+  'Faça uma pausa a cada 2 horas para alongar os ombros e costas. Isso reduz o risco de doenças musculoesqueléticas.',
+  'Beba água regularmente ao longo do dia, não apenas quando tiver sede.',
+  'Mantenha a coluna reta ao sentar e ao carregar objetos pesados.',
+  'Pratique a respiração profunda durante as pausas para reduzir o estresse.',
+  'Um sono de qualidade é fundamental para a saúde ocupacional.',
+  'Comunique ao SESMT qualquer desconforto antes que vire uma lesão.',
+];
+
+// ============================================================
+// INICIALIZAÇÃO
+// ============================================================
+window.addEventListener('load', () => {
+  const u = localStorage.getItem('cs_usuario');
+  if (u) {
+    usuario = JSON.parse(u);
+    iniciarApp();
+  }
+  gerarEscalaUrina();
+  gerarDesafios();
+  gerarConquistas();
+  gerarRecompensas('todos');
+  gerarRanking();
+  gerarErgo();
+});
+
+// ============================================================
+// AUTH
+// ============================================================
+function toggleForms(qual) {
+  document.getElementById('form-login').classList.toggle('hidden', qual !== 'login');
+  document.getElementById('form-cadastro').classList.toggle('hidden', qual !== 'cadastro');
+  mostrarMsg('login','','');
+}
+
+function fazerLogin() {
+  const mat = document.getElementById('inp-matricula').value.trim();
+  if (!mat || mat.length !== 8 || !mat.startsWith('3450')) {
+    mostrarMsg('login', 'Matrícula inválida! Deve ter 8 dígitos e começar com 3450.', 'erro'); return;
+  }
+  const users = JSON.parse(localStorage.getItem('cs_users') || '[]');
+  const u = users.find(x => x.matricula === mat);
+  if (!u) {
+    mostrarMsg('login', 'Matrícula não encontrada. Faça o cadastro primeiro.', 'erro'); return;
+  }
+  usuario = u;
+  localStorage.setItem('cs_usuario', JSON.stringify(u));
+  iniciarApp();
+}
+
+function fazerCadastro() {
+  const nome = document.getElementById('cad-nome').value.trim();
+  const mat = document.getElementById('cad-mat').value.trim();
+  const funcao = document.getElementById('cad-funcao').value;
+  const turno = document.getElementById('cad-turno').value;
+  const peso = parseFloat(document.getElementById('cad-peso').value);
+  const altura = parseFloat(document.getElementById('cad-altura').value);
+  const trabalho = document.getElementById('cad-trabalho').value;
+
+  if (!nome||!mat||!funcao||!turno||!peso||!altura||!trabalho) {
+    mostrarMsg('login', 'Preencha todos os campos obrigatórios.', 'erro'); return;
+  }
+  if (mat.length !== 8 || !mat.startsWith('3450')) {
+    mostrarMsg('login', 'Matrícula deve ter 8 dígitos e começar com 3450.', 'erro'); return;
+  }
+  const users = JSON.parse(localStorage.getItem('cs_users') || '[]');
+  if (users.find(x => x.matricula === mat)) {
+    mostrarMsg('login', 'Matrícula já cadastrada!', 'erro'); return;
+  }
+  const novo = {nome,matricula:mat,funcao,turno,peso,altura,trabalho,obra:'345',pontos:0,avatar:'👷',dataCadastro:new Date().toISOString(),agua_total:0,resp_total:0,seq_max:0};
+  users.push(novo);
+  localStorage.setItem('cs_users', JSON.stringify(users));
+  mostrarMsg('login', '✅ Cadastro realizado! Faça login agora.', 'ok');
+  setTimeout(() => { toggleForms('login'); document.getElementById('inp-matricula').value = mat; }, 2000);
+}
+
+function sair() {
+  if (confirm('Deseja realmente sair?')) {
+    usuario = null;
+    localStorage.removeItem('cs_usuario');
+    document.getElementById('app').classList.remove('on');
+    document.getElementById('tela-login').style.display = 'flex';
+  }
+}
+
+function iniciarApp() {
+  document.getElementById('tela-login').style.display = 'none';
+  document.getElementById('app').classList.add('on');
+  atualizarHeader();
+  atualizarStats();
+  atualizarHidratacao();
+  atualizarPerfil();
+  gerarRecompensas('todos');
+  gerarConquistas();
+  document.getElementById('avatar-display').textContent = usuario.avatar || '👷';
+  document.getElementById('dica-dia').textContent = DICAS[Math.floor(Math.random()*DICAS.length)];
+}
+
+function atualizarHeader() {
+  if (!usuario) return;
+  const h = new Date().getHours();
+  const sauda = h<12?'Bom dia':h<18?'Boa tarde':'Boa noite';
+  document.getElementById('h-saudacao').textContent = sauda + ', ' + usuario.nome.split(' ')[0] + '!';
+  document.getElementById('h-user-nome').textContent = usuario.nome;
+  document.getElementById('h-matricula').textContent = usuario.matricula;
+}
+
+// ============================================================
+// NAVEGAÇÃO
+// ============================================================
+function irPagina(id) {
+  paginaAnterior = document.querySelector('.pagina.ativa')?.id || 'pag-home';
+  document.querySelectorAll('.pagina').forEach(p => p.classList.remove('ativa'));
+  document.getElementById(id).classList.add('ativa');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('ativo'));
+  const navMap = {'pag-home':0,'pag-hidratacao':1,'pag-ergonomia':2,'pag-saude':3,'pag-perfil':4};
+  if (navMap[id] !== undefined) document.querySelectorAll('.nav-btn')[navMap[id]].classList.add('ativo');
+  if (id==='pag-recompensas') atualizarPontosTela();
+  if (id==='pag-hidratacao') atualizarHidratacao();
+  if (id==='pag-conquistas') gerarConquistas();
+  if (id==='pag-ranking') gerarRanking();
+}
+
+function voltarPagina() { irPagina(paginaAnterior); }
+
+// ============================================================
+// STATS
+// ============================================================
+function atualizarStats() {
+  if (!usuario) return;
+  const checkins = dadosUsuario('checkins');
+  const seq = calcSeq(checkins);
+  document.getElementById('s-checkins').textContent = checkins.length;
+  document.getElementById('s-pontos').textContent = usuario.pontos || 0;
+  document.getElementById('s-seq').textContent = seq + '🔥';
+  document.getElementById('rsum-ci').textContent = checkins.filter(c=>dentroDaSemana(c.data)).length;
+  document.getElementById('rsum-agua').textContent = dadosUsuario('agua').filter(a=>dentroDaSemana(a.data)).length;
+  document.getElementById('rsum-desat').textContent = '0';
+}
+
+function calcSeq(checkins) {
+  if (!checkins.length) return 0;
+  let seq = 0;
+  const hoje = new Date(); hoje.setHours(0,0,0,0);
+  for (let i=0;i<60;i++) {
+    const d = new Date(hoje); d.setDate(d.getDate()-i);
+    const ds = d.toDateString();
+    if (checkins.find(c=>new Date(c.data).toDateString()===ds)) seq++;
+    else break;
+  }
+  return seq;
+}
+
+function dentroDaSemana(data) {
+  const d = new Date(data), s = new Date(); s.setDate(s.getDate()-7);
+  return d >= s;
+}
+
+// ============================================================
+// CHECK-IN
+// ============================================================
+function abrirCheckin(tipo) {
+  moodAtual = tipo;
+  const icons = {bem:'😊',leve:'😐',forte:'😞'};
+  const textos = {bem:'Que ótimo! Registre seu check-in',leve:'Vamos registrar sua dor leve',forte:'Vamos cuidar de você. Registre sua dor'};
+  document.getElementById('ci-icon').textContent = icons[tipo];
+  document.getElementById('ci-h').textContent = tipo==='bem'?'Tudo bem hoje?':'Sentindo alguma dor?';
+  document.getElementById('ci-sub').textContent = textos[tipo];
+  document.getElementById('ci-form-dor').classList.toggle('hidden', tipo==='bem');
+  document.getElementById('ci-ok').classList.remove('show');
+  intensidadeAtual = null;
+  abrirModal('modal-checkin');
+}
+
+function selIntCheckin(btn, val) {
+  intensidadeAtual = val;
+  btn.parentElement.querySelectorAll('.int-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+
+function confirmarCheckin() {
+  if (!usuario) return;
+  if ((moodAtual==='leve'||moodAtual==='forte') && !intensidadeAtual) {
+    alert('Selecione a intensidade da dor.'); return;
+  }
+  const ci = {
+    data: new Date().toISOString(),
+    mood: moodAtual,
+    local: document.getElementById('ci-local')?.value || '',
+    intensidade: intensidadeAtual,
+    descricao: document.getElementById('ci-descricao')?.value || '',
+    matricula: usuario.matricula
+  };
+  salvarDado('checkins', ci);
+  adicionarPontos(10);
+  if (moodAtual==='forte') {
+    salvarAlerta({tipo:'dor_forte', mensagem:'Dor forte reportada por '+usuario.nome, data:new Date().toISOString(), matricula:usuario.matricula});
+  }
+  atualizarStats();
+  document.getElementById('ci-ok').classList.add('show');
+  setTimeout(()=>fecharModal('modal-checkin'), 2000);
+}
+
+// ============================================================
+// PRESSÃO
+// ============================================================
+function abrirModalPressao() { abrirModal('modal-pressao'); document.getElementById('press-ok').classList.remove('show'); document.getElementById('press-erro').classList.remove('show'); }
+
+function registrarPressao() {
+  const s = parseInt(document.getElementById('p-sistolica').value);
+  const d = parseInt(document.getElementById('p-diastolica').value);
+  if (!s||!d) { mostrarMsgEl('press-erro','Preencha os dois valores.'); return; }
+  if (s<80||s>200||d<40||d>130) { mostrarMsgEl('press-erro','Valores fora do intervalo normal.'); return; }
+  const alerta = s>=140||d>=90;
+  salvarDado('pressao', {s,d,alerta,data:new Date().toISOString(),matricula:usuario.matricula});
+  adicionarPontos(5);
+  if (alerta) salvarAlerta({tipo:'pressao_alta',mensagem:'Pressão elevada detectada em '+usuario.nome+' ('+s+'/'+d+' mmHg)',data:new Date().toISOString(),matricula:usuario.matricula});
+  const status = alerta?'🔴 Elevada':s>=130||d>=85?'🟡 Atenção':'🟢 Normal';
+  document.getElementById('ultima-pressao').innerHTML = `<strong>${s}/${d} mmHg</strong> <span class="badge" style="background:${alerta?'#FEE2E2':s>=130?'#FEF3C7':'#DCFCE7'};color:${alerta?'#991B1B':s>=130?'#92400E':'#166534'};padding:.2rem .6rem;border-radius:8px;font-size:.75rem;font-weight:600;">${status}</span><br><small style="color:var(--texto2);">${new Date().toLocaleDateString('pt-BR')}</small>`;
+  document.getElementById('press-ok').classList.add('show');
+  setTimeout(()=>fecharModal('modal-pressao'), 2000);
+}
+
+// ============================================================
+// HIDRATAÇÃO
+// ============================================================
+function calcMeta() {
+  if (!usuario) return 2000;
+  const fat = {leve:30,moderado:35,pesado:40}[usuario.trabalho]||35;
+  return usuario.peso * fat;
+}
+
+function addAgua(ml) {
+  if (!usuario) return;
+  salvarDado('agua', {ml, data:new Date().toISOString(), matricula:usuario.matricula, hora:new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})});
+  usuario.agua_total = (usuario.agua_total||0) + 1;
+  adicionarPontos(2);
+  atualizarHidratacao();
+  verificarConquistas();
+}
+
+function atualizarHidratacao() {
+  if (!usuario) return;
+  const meta = calcMeta();
+  const hoje = new Date().toDateString();
+  const registros = dadosUsuario('agua').filter(a=>new Date(a.data).toDateString()===hoje);
+  const total = registros.reduce((s,a)=>s+a.ml,0);
+  const pct = Math.min(100, Math.round((total/meta)*100));
+  const faltam = Math.max(0, Math.ceil((meta-total)/150));
+  document.getElementById('h-peso').textContent = (usuario.peso||'-')+' kg';
+  document.getElementById('h-altura').textContent = (usuario.altura||'-')+' cm';
+  document.getElementById('h-trabalho').textContent = ({leve:'Leve',moderado:'Moderado',pesado:'Pesado'}[usuario.trabalho])||'-';
+  document.getElementById('agua-consumida').textContent = total+'ml';
+  document.getElementById('agua-meta').textContent = meta;
+  document.getElementById('agua-faltam').textContent = faltam;
+  document.getElementById('agua-barra').style.width = pct+'%';
+  document.getElementById('agua-pct').textContent = pct+'%';
+  const hist = document.getElementById('agua-historico');
+  if (registros.length===0) {
+    hist.innerHTML = '<div style="text-align:center;color:var(--texto2);padding:1.5rem;">Nenhum registro ainda</div>';
+  } else {
+    hist.innerHTML = registros.slice().reverse().map(r=>`<div class="item"><div class="item-icon" style="font-size:1.25rem;">💧</div><div class="item-body"><div class="item-title">${r.ml}ml registrados</div><div class="item-sub">${r.hora}</div></div></div>`).join('');
+  }
+}
+
+function gerarEscalaUrina() {
+  const escala = [
+    {cor:'#FFFDE7',nome:'Hidratado',msg:'Excelente! Continue assim.'},
+    {cor:'#FFF9C4',nome:'Bem Hidratado',msg:'Bom nível de hidratação.'},
+    {cor:'#FFF176',nome:'Hidratação Normal',msg:'Nível adequado.'},
+    {cor:'#F9A825',nome:'Leve Desidratação',msg:'Beba mais água.'},
+    {cor:'#E65100',nome:'Desidratação Moderada',msg:'⚠️ Aumente o consumo de água.'},
+    {cor:'#BF360C',nome:'Desidratação Severa',msg:'🚨 Beba água imediatamente!'},
+    {cor:'#4E342E',nome:'Desidratação Crítica',msg:'🚨 Procure ajuda médica!'},
+  ];
+  document.getElementById('escala-urina').innerHTML = escala.map(e=>`<div style="display:flex;align-items:center;gap:.85rem;margin-bottom:.5rem;"><div style="width:48px;height:48px;background:${e.cor};border-radius:10px;border:1px solid rgba(0,0,0,.1);flex-shrink:0;"></div><div><div style="font-weight:600;font-size:.875rem;">${e.nome}</div><div style="font-size:.78rem;color:var(--texto2);">${e.msg}</div></div></div>`).join('');
+}
+
+// ============================================================
+// RESPIRAÇÃO GUIADA - COM ÁUDIO REAL
+// ============================================================
+function iniciarRespiracao(totalCiclos) {
+  if (!totalCiclos) totalCiclos = 5;
+  breathTotalCycles = totalCiclos;
+  breathPhase = 0; breathCycle = 0; breathCount = 0;
+  breathTimeouts.forEach(t=>clearTimeout(t)); breathTimeouts=[];
+  if (breathTimer) clearInterval(breathTimer);
+
+  const minutos = Math.ceil((totalCiclos * 12) / 60);
+  document.getElementById('resp-tempo-total').textContent = `${minutos} minuto(s) · ${totalCiclos} ciclos`;
+  document.getElementById('resp-msg-fim').style.display = 'none';
+  abrirModal('modal-respiracao');
+
+  setTimeout(()=>{ falarTexto('Exercício de respiração iniciado. Siga as instruções.'); executarFase(); }, 1000);
+}
+
+function executarFase() {
+  if (breathCycle >= breathTotalCycles) {
+    concluirRespiracao(); return;
+  }
+  const fases = [
+    {texto:'Inspire...', fala:'Inspire profundamente pelo nariz', expande:true, segundos:4},
+    {texto:'Segure...', fala:'Segure a respiração', expande:true, segundos:4},
+    {texto:'Expire...', fala:'Expire lentamente pela boca', expande:false, segundos:4},
+  ];
+  const fase = fases[breathPhase%3];
+  const circulo = document.getElementById('resp-circulo');
+  document.getElementById('resp-fase').textContent = fase.texto;
+  document.getElementById('resp-ciclos').textContent = `Ciclo ${breathCycle+1} de ${breathTotalCycles}`;
+  circulo.classList.toggle('expandir', fase.expande);
+  falarTexto(fase.fala);
+
+  let cnt = fase.segundos;
+  document.getElementById('resp-contador').textContent = cnt;
+  if (breathTimer) clearInterval(breathTimer);
+  breathTimer = setInterval(()=>{
+    cnt--;
+    document.getElementById('resp-contador').textContent = cnt;
+    if (cnt<=0) {
+      clearInterval(breathTimer);
+      breathPhase++;
+      if (breathPhase%3===0) breathCycle++;
+      const t = setTimeout(executarFase, 300);
+      breathTimeouts.push(t);
+    }
+  },1000);
+}
+
+function concluirRespiracao() {
+  clearInterval(breathTimer);
+  const mensagens = [
+    'Parabéns! Você concluiu o exercício de respiração! 🌟 Como se sente agora?',
+    'Muito bem! Você conseguiu! Respire sempre que sentir estresse.',
+    'Excelente! Seu corpo agradece. Continue praticando todos os dias!',
+    'Ótimo trabalho! A respiração consciente reduz o estresse e melhora o foco.',
+  ];
+  const msg = mensagens[Math.floor(Math.random()*mensagens.length)];
+  document.getElementById('resp-msg-fim').textContent = '✅ ' + msg;
+  document.getElementById('resp-msg-fim').style.display = 'block';
+  falarTexto('Parabéns! Você concluiu o exercício de respiração. ' + msg);
+  adicionarPontos(5);
+  usuario.resp_total = (usuario.resp_total||0)+1;
+  salvarUsuario();
+  verificarConquistas();
+}
+
+function pararRespiracao() {
+  clearInterval(breathTimer);
+  breathTimeouts.forEach(t=>clearTimeout(t));
+  window.speechSynthesis?.cancel();
+  fecharModal('modal-respiracao');
+}
+
+function falarTexto(texto) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(texto);
+    u.lang = 'pt-BR'; u.rate = 0.85; u.pitch = 1.0; u.volume = 1.0;
+    // Tentar voz feminina brasileira
+    const vozes = window.speechSynthesis.getVoices();
+    const voz = vozes.find(v=>v.lang.startsWith('pt')&&v.name.toLowerCase().includes('female'))||
+                vozes.find(v=>v.lang.startsWith('pt'))||null;
+    if (voz) u.voice = voz;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+// Sons de fundo com Web Audio
+function gerarSomFundo(tipo) {
+  if (!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  if (audioNode) { audioNode.stop?.(); audioNode=null; }
+  if (tipo==='none') return;
+  // Chuva suave: ruído branco filtrado
+  if (tipo==='chuva') {
+    const buf = audioCtx.createBuffer(1, audioCtx.sampleRate*2, audioCtx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i=0;i<data.length;i++) data[i]=(Math.random()*2-1)*0.3;
+    const src = audioCtx.createBufferSource(); src.buffer=buf; src.loop=true;
+    const filt = audioCtx.createBiquadFilter(); filt.type='lowpass'; filt.frequency.value=800;
+    const gain = audioCtx.createGain(); gain.gain.value=0.4;
+    src.connect(filt); filt.connect(gain); gain.connect(audioCtx.destination);
+    src.start(); audioNode=src;
+  }
+  // Ondas: oscilação lenta
+  if (tipo==='ocean') {
+    const osc = audioCtx.createOscillator(); osc.frequency.value=0.2;
+    const gain = audioCtx.createGain(); gain.gain.value=0.3;
+    const lfo = audioCtx.createOscillator(); lfo.frequency.value=0.05;
+    const lfoGain = audioCtx.createGain(); lfoGain.gain.value=0.2;
+    lfo.connect(lfoGain); lfoGain.connect(gain.gain);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); lfo.start(); audioNode=osc;
+  }
+}
+
+// ============================================================
+// ERGONOMIA
+// ============================================================
+function gerarErgo() {
+  // Alongamentos
+  const along = document.getElementById('ergo-along');
+  along.innerHTML = ERGONOMIA_ALONG.map((e,i)=>`
+    <div class="card" id="along-${i}">
+      <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="toggleAlong(${i})">
+        <div><div class="card-titulo" style="margin:0;">${e.icon} ${e.nome}</div><div style="font-size:.78rem;color:var(--texto2);margin-top:.2rem;">${e.desc}</div><div style="font-size:.75rem;color:var(--texto2);margin-top:.2rem;">⏱️ ${e.tempo}s · ${e.dif}</div></div>
+        <div id="along-arr-${i}" style="font-size:1.25rem;color:var(--texto2);">▼</div>
+      </div>
+      <div id="along-body-${i}" class="hidden" style="margin-top:1rem;">
+        <div style="margin-bottom:.85rem;">
+          <div style="font-weight:700;margin-bottom:.5rem;">Instruções:</div>
+          <ol style="padding-left:1.25rem;font-size:.875rem;color:var(--texto2);">${e.instrucoes.map((ins,j)=>`<li style="margin-bottom:.3rem;color:#3B82F6;font-weight:500;">${ins}</li>`).join('')}</ol>
+        </div>
+        <div style="margin-bottom:.85rem;"><div style="font-weight:700;margin-bottom:.5rem;">Benefícios:</div>${e.beneficios.map(b=>`<div style="font-size:.8rem;color:var(--texto2);">✓ ${b}</div>`).join('')}</div>
+        <button class="btn btn-primary btn-full" onclick="iniciarAlong(${i})">▶ Fazer Agora</button>
+      </div>
+    </div>`).join('');
+
+  // Posturas
+  const post = document.getElementById('ergo-post');
+  post.innerHTML = ERGONOMIA_POST.map((e,i)=>`
+    <div class="card">
+      <div class="card-titulo">${e.icon} ${e.nome}</div>
+      <div style="font-size:.78rem;color:var(--texto2);margin-bottom:.85rem;">⏱️ ${e.tempo}s · ${e.dif}</div>
+      <div style="font-weight:700;margin-bottom:.5rem;">Instruções:</div>
+      <ol style="padding-left:1.25rem;font-size:.875rem;">${e.instrucoes.map((ins,j)=>`<li style="margin-bottom:.3rem;color:#3B82F6;font-weight:500;">${ins}</li>`).join('')}</ol>
+      <div style="margin-top:.85rem;font-weight:700;margin-bottom:.5rem;">Benefícios:</div>${e.beneficios.map(b=>`<div style="font-size:.8rem;color:var(--texto2);">✓ ${b}</div>`).join('')}
+    </div>`).join('');
+
+  // Respiração na aba ergonomia
+  const resp = document.getElementById('ergo-resp');
+  resp.innerHTML = `
+    <div class="card">
+      <div class="card-titulo">🌬️ Respiração Profunda</div>
+      <div style="font-size:.78rem;color:var(--texto2);margin-bottom:.85rem;">⏱️ 120s · fácil</div>
+      <div style="font-weight:700;margin-bottom:.5rem;">Instruções:</div>
+      <ol style="padding-left:1.25rem;font-size:.875rem;">${['Sente-se confortavelmente com a coluna reta','Inspire profundamente pelo nariz contando até 4','Segure a respiração contando até 4','Expire lentamente pela boca contando até 4','Repita este padrão 10 vezes'].map((ins,j)=>`<li style="margin-bottom:.3rem;color:#3B82F6;font-weight:500;">${ins}</li>`).join('')}</ol>
+      <div style="margin-top:.85rem;"><div style="font-weight:700;margin-bottom:.5rem;">Escolha o som de fundo:</div>
+      <div class="som-selector">
+        <div class="som-opt sel" onclick="selSom('none',this)">🔇 Silêncio</div>
+        <div class="som-opt" onclick="selSom('chuva',this)">🌧️ Chuva Suave</div>
+        <div class="som-opt" onclick="selSom('ocean',this)">🌊 Ondas do Mar</div>
+        <div class="som-opt" onclick="selSom('forest',this)">🌲 Floresta</div>
+      </div></div>
+      <button class="btn btn-primary btn-full" style="margin-top:1rem;" onclick="iniciarResp()">▶ Iniciar Respiração Guiada</button>
+    </div>`;
+}
+
+function toggleAlong(i) {
+  const body = document.getElementById('along-body-'+i);
+  const arr = document.getElementById('along-arr-'+i);
+  body.classList.toggle('hidden');
+  arr.textContent = body.classList.contains('hidden')?'▼':'▲';
+}
+
+let alongAtual = null;
+let alongFase = 0;
+let alongTimer2 = null;
+
+function iniciarAlong(i) {
+  alongAtual = ERGONOMIA_ALONG[i];
+  alongFase = 0;
+  executarAlong();
+}
+
+function executarAlong() {
+  if (!alongAtual || alongFase >= alongAtual.fases.length) {
+    falarTexto('Muito bem! Alongamento concluído. Parabéns!');
+    adicionarPontos(5);
+    return;
+  }
+  const fase = alongAtual.fases[alongFase];
+  falarTexto(fase.instrucao + '. Mantenha por ' + fase.segundos + ' segundos.');
+  
+  let cnt = fase.segundos;
+  const cont = ()=>{
+    cnt--;
+    if (cnt===Math.floor(fase.segundos/2) && alongAtual.fases.length>1 && alongFase===0) {
+      falarTexto('Metade do tempo. Mantenha a posição.');
+    }
+    if (cnt<=3 && cnt>0) falarTexto(cnt+'');
+    if (cnt<=0) {
+      alongFase++;
+      if (alongFase<alongAtual.fases.length) {
+        const proxFase = alongAtual.fases[alongFase];
+        falarTexto('Agora troque para o outro lado. ' + proxFase.instrucao);
+        setTimeout(executarAlong, 2000);
+      } else {
+        falarTexto('Muito bem! Alongamento concluído!');
+        adicionarPontos(5);
+      }
+    }
+  };
+  alongTimer2 = setInterval(cont, 1000);
+  setTimeout(()=>clearInterval(alongTimer2), (fase.segundos+1)*1000);
+}
+
+function selSom(tipo, el) {
+  somSelecionado = tipo;
+  document.querySelectorAll('.som-opt').forEach(s=>s.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function iniciarResp() {
+  if (somSelecionado !== 'none') gerarSomFundo(somSelecionado);
+  iniciarRespiracao(5);
+}
+
+function trocarTabErgo(aba) {
+  ['along','post','resp'].forEach(a=>{
+    document.getElementById('ergo-'+a).classList.toggle('hidden',a!==aba);
+    document.getElementById('tab-'+a).classList.toggle('sel',a===aba);
+  });
+}
+
+// ============================================================
+// SINTOMAS
+// ============================================================
+const SINTOMAS_LIST = ['Dor nas costas','Dor no ombro','Dor no joelho','Ansiedade','Fadiga','Dor de cabeça'];
+
+(function gerarSintomas(){
+  setTimeout(()=>{
+    const el = document.getElementById('lista-sintomas');
+    if (el) el.innerHTML = SINTOMAS_LIST.map(s=>`
+      <div class="sintoma-check" onclick="toggleSintoma('${s}',this)">
+        <input type="checkbox" onclick="event.stopPropagation()">
+        <span style="font-weight:500;font-size:.9rem;">${s}</span>
+      </div>`).join('');
+  },100);
+})();
+
+function toggleSintoma(nome, el) {
+  el.classList.toggle('sel');
+  const cb = el.querySelector('input');
+  cb.checked = !cb.checked;
+  if (cb.checked) sintomasSel.push(nome);
+  else sintomasSel = sintomasSel.filter(s=>s!==nome);
+}
+
+function selInt(btn, val) {
+  intSintoma = val;
+  btn.parentElement.querySelectorAll('.int-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+
+function enviarSintomas() {
+  if (!sintomasSel.length) { alert('Selecione pelo menos um sintoma.'); return; }
+  salvarDado('sintomas', {sintomas:sintomasSel, intensidade:intSintoma, descricao:document.getElementById('sint-descricao').value, data:new Date().toISOString(), matricula:usuario.matricula});
+  if (intSintoma==='forte') salvarAlerta({tipo:'sintoma_forte',mensagem:'Sintoma forte reportado por '+usuario.nome+': '+sintomasSel.join(', '),data:new Date().toISOString(),matricula:usuario.matricula});
+  adicionarPontos(5);
+  alert('✅ Sintomas reportados com sucesso! O SESMT foi notificado.');
+  sintomasSel=[]; intSintoma=null;
+  document.querySelectorAll('.sintoma-check').forEach(el=>{el.classList.remove('sel');el.querySelector('input').checked=false;});
+  document.querySelectorAll('.int-btn').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('sint-descricao').value='';
+}
+
+// ============================================================
+// DESAFIOS
+// ============================================================
+function gerarDesafios() {
+  document.getElementById('lista-desafios').innerHTML = DESAFIOS.map(d=>`
+    <div class="desafio" onclick="abrirDesafio(${d.id})">
+      <div class="desafio-topo">
+        <div class="desafio-icon-wrap" style="background:${d.cor}20;">${d.icon}</div>
+        <div class="item-body">
+          <div class="desafio-nome">${d.nome}</div>
+          <div class="desafio-desc">${d.desc}</div>
+          <div class="desafio-metas">
+            <span class="tag">⏱️ ${d.duracao} dias</span>
+            <span class="tag-laranja">⭐ ${d.pontos} pts</span>
+            <span class="tag-${d.dificuldade==='Fácil'?'verde':d.dificuldade==='Médio'?'amarelo':'vermelho'}">${d.dificuldade}</span>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function abrirDesafio(id) {
+  desafioAtual = DESAFIOS.find(d=>d.id===id);
+  if (!desafioAtual) return;
+  const d = desafioAtual;
+  const cores = {Fácil:'verde',Médio:'amarelo',Difícil:'vermelho'};
+  document.getElementById('md-icon-wrap').style.background = d.cor+'20';
+  document.getElementById('md-icon-wrap').textContent = d.icon;
+  document.getElementById('md-dif').innerHTML = `<span class="tag-${cores[d.dificuldade]}">${d.dificuldade}</span>`;
+  document.getElementById('md-nome').textContent = d.nome;
+  document.getElementById('md-desc').textContent = d.desc;
+  document.getElementById('md-stats').innerHTML = `
+    <div style="background:var(--bg);border-radius:10px;padding:.75rem;text-align:center;"><div style="font-weight:700;">${d.duracao} dias</div><div style="font-size:.7rem;color:var(--texto2);">Duração</div></div>
+    <div style="background:var(--bg);border-radius:10px;padding:.75rem;text-align:center;"><div style="font-weight:700;color:var(--laranja);">+${d.pontos}</div><div style="font-size:.7rem;color:var(--texto2);">Pontos</div></div>
+    <div style="background:var(--bg);border-radius:10px;padding:.75rem;text-align:center;"><div style="font-weight:700;">${d.meta}</div><div style="font-size:.7rem;color:var(--texto2);">Meta</div></div>`;
+  
+  // Tab Guia
+  document.getElementById('md-tab-guia').innerHTML = `
+    <div style="margin-bottom:1rem;"><div style="font-weight:700;margin-bottom:.65rem;">📖 Como Completar</div><ol style="padding-left:1.25rem;">${d.como.map((c,i)=>`<li style="margin-bottom:.4rem;font-size:.875rem;"><span style="background:var(--azul-escuro);color:#fff;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;margin-right:.5rem;">${i+1}</span>${c}</li>`).join('')}</ol></div>
+    <div style="background:rgba(34,197,94,.08);border-radius:12px;padding:1rem;"><div style="font-weight:700;color:var(--verde);margin-bottom:.35rem;">💡 Dicas</div><div style="font-size:.8rem;color:var(--texto2);">• ${d.dicas}<br>• Convide um colega para fazer junto<br>• Registre seu progresso diariamente no app</div></div>`;
+
+  // Tab Progresso - Calendário
+  const prog = dadosUsuario('desafio_'+id);
+  const dias = Array.from({length:d.duracao},(_,i)=>i+1);
+  document.getElementById('md-tab-progresso').innerHTML = `
+    <div class="barra-wrap"><div class="barra" style="width:${Math.round((prog.length/d.duracao)*100)}%"></div><div class="barra-txt">${prog.length}/${d.duracao} dias</div></div>
+    <div style="font-weight:700;margin:.85rem 0 .5rem;">📅 Calendário</div>
+    <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem;">${dias.map(i=>`<div style="width:38px;height:38px;border-radius:50%;background:${i<=prog.length?'var(--laranja)':i===prog.length+1?'var(--azul-escuro)':'var(--bg)'};color:${i<=prog.length||i===prog.length+1?'#fff':'var(--texto2)'};display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;">${i}</div>`).join('')}</div>
+    <div style="font-weight:700;margin-bottom:.5rem;">📝 Registrar Hoje</div>
+    <div class="campo"><label style="font-size:.8rem;">Horário</label><input type="time" id="desat-hora" style="width:100%;padding:.75rem;border:2px solid var(--borda);border-radius:10px;font-family:inherit;"></div>
+    <div class="campo"><label style="font-size:.8rem;">Como foi hoje?</label><textarea id="desat-relato" style="width:100%;padding:.75rem;border:2px solid var(--borda);border-radius:10px;font-family:inherit;resize:none;" rows="3" placeholder="Descreva como foi seu dia no desafio..."></textarea></div>
+    <button class="btn btn-primary btn-full" onclick="registrarDiaDesafio(${id})">✅ Registrar Progresso de Hoje</button>`;
+
+  // Fotos
+  const fotoCategorias = ['Pesagem','Refeição','Atividade','Outro'];
+  document.getElementById('foto-cats').innerHTML = fotoCategorias.map(c=>`<div class="som-opt ${c==='Atividade'?'sel':''}" onclick="selFotoCat('${c}',this)">${c==='Pesagem'?'⚖️':c==='Refeição'?'🍽️':c==='Atividade'?'🏃':'📝'} ${c}</div>`).join('');
+
+  trocarTabDesafio('guia', document.querySelector('#md-tabs .som-opt.sel'));
+  document.getElementById('md-btn-iniciar').innerHTML = `<button class="btn btn-primary btn-full" onclick="iniciarDesafio(${id})">🚀 Iniciar Desafio</button>`;
+  abrirModal('modal-desafio');
+}
+
+function trocarTabDesafio(aba, btn) {
+  ['guia','progresso','fotos','dificuldade'].forEach(a=>{
+    document.getElementById('md-tab-'+a).classList.toggle('hidden',a!==aba);
+  });
+  document.querySelectorAll('#md-tabs .som-opt').forEach(b=>b.classList.remove('sel'));
+  if (btn) btn.classList.add('sel');
+}
+
+function registrarDiaDesafio(id) {
+  const relato = document.getElementById('desat-relato')?.value||'';
+  const hora = document.getElementById('desat-hora')?.value||'';
+  salvarDado('desafio_'+id, {data:new Date().toISOString(), relato, hora, matricula:usuario.matricula});
+  adicionarPontos(20);
+  alert('✅ Progresso registrado! +20 pontos');
+  abrirDesafio(id);
+}
+
+function iniciarDesafio(id) {
+  alert('🚀 Desafio iniciado! Registre seu progresso diariamente.');
+  fecharModal('modal-desafio');
+}
+
+function selFotoCat(cat, el) {
+  fotoCatSel = cat;
+  document.querySelectorAll('#foto-cats .som-opt').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function simularFoto() {
+  const fotos = dadosUsuario('fotos_desafio');
+  fotos.push({cat:fotoCatSel, desc:document.getElementById('foto-desc')?.value||'', data:new Date().toISOString(), matricula:usuario.matricula});
+  localStorage.setItem(`cs_fotos_${usuario.matricula}`, JSON.stringify(fotos));
+  document.getElementById('foto-desc').value='';
+  document.getElementById('fotos-lista').innerHTML = fotos.map(f=>`<div style="background:var(--bg);border-radius:10px;padding:.75rem;margin-bottom:.5rem;"><div style="font-size:.75rem;color:var(--laranja);font-weight:600;">${f.cat}</div><div style="font-size:.8rem;">${f.desc||'Foto registrada'}</div><div style="font-size:.72rem;color:var(--texto2);">${new Date(f.data).toLocaleDateString('pt-BR')}</div></div>`).join('');
+  adicionarPontos(5);
+  alert('📸 Foto registrada! +5 pontos');
+}
+
+function enviarDificuldade() {
+  const txt = document.getElementById('dif-texto')?.value||'';
+  if (!txt.trim()) { alert('Descreva sua dificuldade.'); return; }
+  salvarAlerta({tipo:'dificuldade_desafio', mensagem:'Dificuldade no desafio: '+txt, data:new Date().toISOString(), matricula:usuario.matricula});
+  alert('✅ Dificuldade registrada! A equipe de saúde entrará em contato.');
+  document.getElementById('dif-texto').value='';
+}
+
+// ============================================================
+// RANKING
+// ============================================================
+function gerarRanking() {
+  const users = JSON.parse(localStorage.getItem('cs_users')||'[]');
+  const sorted = [...users].sort((a,b)=>(b.pontos||0)-(a.pontos||0));
+  const NAMES_FALLBACK = ['João Silva','Maria Santos','Pedro Oliveira','Ana Costa','Carlos Lima','Fernanda Reis','José Almeida','Camila Martins'];
+  const demo = NAMES_FALLBACK.slice(0,5).map((n,i)=>({nome:n,pontos:[2450,2100,1850,1600,1200][i],funcao:'Pedreiro',avatar:AVATARES[i%AVATARES.length]}));
+  const lista = sorted.length>1?sorted:[...sorted,...demo.slice(0,5-sorted.length)];
+  
+  const podio = lista.slice(0,3);
+  const order = podio.length>=3?[podio[1],podio[0],podio[2]]:[podio[0]];
+  const alts = [2,1,3]; const sizes = ['70px','80px','70px'];
+  document.getElementById('podio-display').innerHTML = (podio.length>=3?order:podio).map((u,i)=>`
+    <div class="podio-item" style="${i===1||podio.length<3?'':'margin-bottom:20px'}">
+      <div class="podio-posicao">${['🥈','🥇','🥉'][i]}</div>
+      <div class="podio-avatar" style="width:${sizes[i]};height:${sizes[i]};background:var(--bg);">${u.avatar||'👷'}</div>
+      <div class="podio-nome">${u.nome?.split(' ')[0]||'?'}</div>
+      <div class="podio-pts">${u.pontos||0} pts</div>
+    </div>`).join('');
+  
+  document.getElementById('rank-lista').innerHTML = lista.map((u,i)=>`
+    <div class="rank-item" style="${u.matricula===usuario?.matricula?'border:2px solid var(--laranja);':''}" >
+      <div class="rank-pos">${i+1}°</div>
+      <div class="rank-avatar">${u.avatar||'👷'}</div>
+      <div class="rank-info"><div class="rank-nome">${u.nome||'?'}</div><div class="rank-nivel">${u.funcao||'Obra'}</div></div>
+      <div class="rank-pts">${u.pontos||0}</div>
+    </div>`).join('');
+}
+
+function trocarRank(tipo) {
+  document.getElementById('rank-sem').classList.toggle('sel',tipo==='semanal');
+  document.getElementById('rank-men').classList.toggle('sel',tipo==='mensal');
+  gerarRanking();
+}
+
+// ============================================================
+// CONQUISTAS
+// ============================================================
+function gerarConquistas() {
+  if (!usuario) return;
+  const el = document.getElementById('lista-conquistas');
+  if (!el) return;
+  const aguaTotal = (dadosUsuario('agua').length)||0;
+  const seqMax = calcSeq(dadosUsuario('checkins'));
+  const respTotal = usuario.resp_total||0;
+  const vals = {agua_total:aguaTotal, seq_max:seqMax, resp_total:respTotal};
+  
+  let desbloq = 0;
+  const html = CONQUISTAS.map(c=>{
+    const atual = Math.min(vals[c.chave]||0, c.total);
+    const pct = Math.round((atual/c.total)*100);
+    const feito = pct>=100;
+    if (feito) desbloq++;
+    return `<div class="conquista" style="${feito?'border:2px solid var(--laranja);':''}">
+      <div class="conq-icon">${feito?c.icon:'🔒'}</div>
+      <div class="conq-body">
+        <div class="conq-nome">${c.nome}</div>
+        <div class="conq-desc">${c.desc}</div>
+        <div style="font-size:.75rem;color:var(--texto2);">${atual}/${c.total}</div>
+        <div class="conq-prog"><div class="conq-prog-bar" style="width:${pct}%"></div></div>
+        <div class="conq-pts">+${c.pts} pontos</div>
+      </div>
+      <div style="font-weight:700;color:${feito?'var(--laranja)':'var(--texto2)'};">${pct}%</div>
+    </div>`;
+  });
+  
+  // Agrupar por categoria
+  const cats = [...new Set(CONQUISTAS.map(c=>c.cat))];
+  let final = '';
+  cats.forEach(cat=>{
+    final += `<div class="card-titulo">${cat}</div>`;
+    CONQUISTAS.filter(c=>c.cat===cat).forEach(c=>{
+      const atual = Math.min(vals[c.chave]||0, c.total);
+      const pct = Math.round((atual/c.total)*100);
+      const feito = pct>=100;
+      final += `<div class="conquista" style="${feito?'border:2px solid var(--laranja);':''}margin-bottom:.65rem;">
+        <div class="conq-icon">${feito?c.icon:'🔒'}</div>
+        <div class="conq-body"><div class="conq-nome">${c.nome}</div><div class="conq-desc">${c.desc}</div>
+        <div style="font-size:.75rem;color:var(--texto2);">${atual}/${c.total}</div>
+        <div class="conq-prog"><div class="conq-prog-bar" style="width:${pct}%"></div></div>
+        <div class="conq-pts">+${c.pts} pontos</div></div>
+        <div style="font-weight:700;color:${feito?'var(--laranja)':'var(--texto2)'};">${pct}%</div>
+      </div>`;
+    });
+  });
+  
+  el.innerHTML = final;
+  const tot = CONQUISTAS.length;
+  const pctGeral = Math.round((desbloq/tot)*100);
+  document.getElementById('conq-total').textContent = pctGeral+'%';
+  document.getElementById('conq-sub').textContent = desbloq+' de '+tot+' conquistas desbloqueadas';
+}
+
+function verificarConquistas() {
+  // Verifica e adiciona pontos de conquista se necessário
+  if (!usuario) return;
+  const aguaTotal = dadosUsuario('agua').length||0;
+  const seqMax = calcSeq(dadosUsuario('checkins'));
+  CONQUISTAS.forEach(c=>{
+    const val = {agua_total:aguaTotal,seq_max:seqMax,resp_total:usuario.resp_total||0}[c.chave]||0;
+    const key = 'conq_done_'+c.id+'_'+usuario.matricula;
+    if (val>=c.total && !localStorage.getItem(key)) {
+      localStorage.setItem(key,'1');
+      adicionarPontos(c.pts);
+      setTimeout(()=>alert('🏆 Conquista desbloqueada: '+c.nome+'! +'+c.pts+' pontos!'),300);
+    }
+  });
+}
+
+// ============================================================
+// RECOMPENSAS
+// ============================================================
+let filtroRecomp = 'todos';
+function gerarRecompensas(filtro) {
+  filtroRecomp = filtro;
+  const pts = usuario?.pontos||0;
+  const lista = filtro==='todos'?RECOMPENSAS:RECOMPENSAS.filter(r=>r.cat===filtro);
+  document.getElementById('lista-recompensas').innerHTML = lista.map(r=>{
+    const pode = pts>=r.pts;
+    const faltam = r.pts-pts;
+    return `<div class="recomp-item" style="${!pode?'opacity:.55;':''}">
+      <div class="recomp-icon">${r.icon}</div>
+      <div class="recomp-body">
+        <div class="recomp-nome">${r.nome}</div>
+        <div class="recomp-pts2">${r.pts} pontos</div>
+        <div style="font-size:.75rem;color:var(--texto2);">${r.desc}</div>
+        ${!pode?`<div style="font-size:.72rem;color:var(--laranja);">💡 Faltam ${faltam} pontos</div>`:''}
+      </div>
+      <div class="recomp-status" style="color:${pode?'var(--verde)':'var(--texto2)'};">${pode?'✓ Resgatar':'🔒'}</div>
+    </div>`;
+  }).join('');
+  if (usuario) document.getElementById('recomp-pts-val').textContent = pts;
+}
+
+function filtrarRecompensa(cat, btn) {
+  document.querySelectorAll('#recomp-filtros .som-opt').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  gerarRecompensas(cat);
+}
+
+function atualizarPontosTela() {
+  if (usuario) {
+    document.getElementById('recomp-pts-val').textContent = usuario.pontos||0;
+    gerarRecompensas(filtroRecomp);
+  }
+}
+
+// ============================================================
+// AVATAR
+// ============================================================
+function abrirModalAvatar() {
+  document.getElementById('grade-avatares').innerHTML = AVATARES.map(a=>`
+    <div class="avatar-opt ${(usuario?.avatar||'👷')===a?'sel':''}" onclick="selecionarAvatar('${a}',this)">${a}</div>`).join('');
+  abrirModal('modal-avatar');
+}
+
+function selecionarAvatar(av, el) {
+  avatarTemp = av;
+  document.querySelectorAll('.avatar-opt').forEach(a=>a.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function salvarAvatar() {
+  if (!avatarTemp) { fecharModal('modal-avatar'); return; }
+  usuario.avatar = avatarTemp;
+  salvarUsuario();
+  document.getElementById('avatar-display').textContent = avatarTemp;
+  fecharModal('modal-avatar');
+}
+
+// ============================================================
+// PERFIL
+// ============================================================
+function atualizarPerfil() {
+  if (!usuario) return;
+  document.getElementById('p-nome').textContent = usuario.nome||'-';
+  document.getElementById('p-cargo').textContent = usuario.funcao||'-';
+  document.getElementById('p-mat').textContent = usuario.matricula||'-';
+  const turnos = {manha:'Matutino (6h-14h)',tarde:'Vespertino (14h-22h)',noite:'Noturno (22h-6h)'};
+  document.getElementById('p-turno').textContent = turnos[usuario.turno]||'-';
+  document.getElementById('p-funcao').textContent = usuario.funcao||'-';
+  document.getElementById('user-points')?.textContent;
+}
+
+// ============================================================
+// PONTOS
+// ============================================================
+function adicionarPontos(pts) {
+  if (!usuario) return;
+  usuario.pontos = (usuario.pontos||0)+pts;
+  salvarUsuario();
+  atualizarStats();
+  document.getElementById('s-pontos').textContent = usuario.pontos;
+}
+
+// ============================================================
+// DADOS
+// ============================================================
+function dadosUsuario(chave) {
+  if (!usuario) return [];
+  return JSON.parse(localStorage.getItem(`cs_${chave}_${usuario.matricula}`) || '[]');
+}
+
+function salvarDado(chave, dado) {
+  if (!usuario) return;
+  const dados = dadosUsuario(chave);
+  dados.push(dado);
+  localStorage.setItem(`cs_${chave}_${usuario.matricula}`, JSON.stringify(dados));
+}
+
+function salvarUsuario() {
+  if (!usuario) return;
+  localStorage.setItem('cs_usuario', JSON.stringify(usuario));
+  const users = JSON.parse(localStorage.getItem('cs_users')||'[]');
+  const idx = users.findIndex(u=>u.matricula===usuario.matricula);
+  if (idx!==-1) users[idx]=usuario;
+  localStorage.setItem('cs_users', JSON.stringify(users));
+}
+
+function salvarAlerta(alerta) {
+  const alertas = JSON.parse(localStorage.getItem('cs_alertas')||'[]');
+  alertas.push(alerta);
+  localStorage.setItem('cs_alertas', JSON.stringify(alertas));
+}
+
+// ============================================================
+// MODAIS
+// ============================================================
+function abrirModal(id) { document.getElementById(id).classList.add('aberto'); }
+function fecharModal(id) { document.getElementById(id).classList.remove('aberto'); }
+
+document.querySelectorAll('.modal').forEach(m=>{
+  m.addEventListener('click',e=>{ if(e.target===m) fecharModal(m.id); });
+});
+
+// ============================================================
+// UTILITÁRIOS
+// ============================================================
+function mostrarMsg(ctx, texto, tipo) {
+  const err = document.getElementById('msg-'+ctx+'-erro');
+  const ok = document.getElementById('msg-'+ctx+'-ok');
+  if (err) { err.textContent=''; err.classList.remove('show'); }
+  if (ok) { ok.textContent=''; ok.classList.remove('show'); }
+  if (!texto) return;
+  const el = tipo==='erro'?err:ok;
+  if (el) { el.textContent=texto; el.classList.add('show'); }
+}
+
+function mostrarMsgEl(id, texto) {
+  const el = document.getElementById(id);
+  if (el) { el.textContent=texto; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),4000); }
+}
+
+// Carregar vozes ao abrir página
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.getVoices();
+  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+}
+
+function abrirModalEditarPerfil() {
+  alert('Para editar peso/altura/trabalho, saia e recadastre sua matrícula. Em breve esta função estará disponível!');
+}
+
+// ============================================================
+// MÓDULOS v2.0 - TODAS AS MELHORIAS INTEGRADAS
+// ============================================================
+
+// VALIDAÇÃO DE TURNOS
+const TURNOS = {
+  matutino: { inicio: '07:30', fim: '17:30', label: 'Matutino (7h30 - 17h30)' },
+  noturno: { inicio: '17:30', fim: '03:30', label: 'Noturno (17h30 - 3h30)' }
+};
+
+function dentroDoTurno(turnoUsuario) {
+  if (!turnoUsuario) return true;
+  const agora = new Date();
+  const horaAtual = agora.getHours() * 60 + agora.getMinutes();
+  const turno = TURNOS[turnoUsuario];
+  if (!turno) return true;
+  const [hI, mI] = turno.inicio.split(':').map(Number);
+  const [hF, mF] = turno.fim.split(':').map(Number);
+  const inicio = hI * 60 + mI;
+  let fim = hF * 60 + mF;
+  if (fim < inicio) return horaAtual >= inicio || horaAtual <= fim;
+  return horaAtual >= inicio && horaAtual <= fim;
+}
+
+// TRAVA CHECK-IN (1 POR DIA)
+function verificarCheckinDuplicado() {
+  const hoje = new Date().toDateString();
+  const checkins = dadosUsuario('checkins');
+  if (checkins.some(c => new Date(c.data).toDateString() === hoje)) {
+    alert('✅ Você já fez o check-in hoje! Volte amanhã.');
+    return false;
+  }
+  return true;
+}
+
+// OVERRIDE abrirCheckin com validações
+const _originalAbrirCheckin = typeof abrirCheckin !== 'undefined' ? abrirCheckin : null;
+abrirCheckin = function(tipo) {
+  if (!verificarCheckinDuplicado()) return;
+  if (usuario && usuario.turno && !dentroDoTurno(usuario.turno)) {
+    const label = TURNOS[usuario.turno]?.label || usuario.turno;
+    alert(`⏰ Check-in só é permitido durante seu turno: ${label}`);
+    return;
+  }
+  if (_originalAbrirCheckin) {
+    return _originalAbrirCheckin(tipo);
+  } else {
+    moodAtual = tipo;
+    const icons = {bem:'😊',leve:'😐',forte:'😞'};
+    const textos = {bem:'Que ótimo! Registre seu check-in',leve:'Vamos registrar sua dor leve',forte:'Vamos cuidar de você'};
+    document.getElementById('ci-icon').textContent = icons[tipo];
+    document.getElementById('ci-h').textContent = tipo==='bem'?'Tudo bem hoje?':'Sentindo alguma dor?';
+    document.getElementById('ci-sub').textContent = textos[tipo];
+    document.getElementById('ci-form-dor').classList.toggle('hidden', tipo==='bem');
+    document.getElementById('ci-ok').classList.remove('show');
+    intensidadeAtual = null;
+    abrirModal('modal-checkin');
+  }
+};
+
+// ÁUDIO MELHORADO COM PAUSAS
+async function falarComPausa(texto, pausaDepois = 2000) {
+  return new Promise((resolve) => {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(texto);
+    u.lang = 'pt-BR';
+    u.rate = 0.75;
+    u.pitch = 1.0;
+    u.volume = 1.0;
+    const vozes = window.speechSynthesis.getVoices();
+    const voz = vozes.find(v => v.lang.startsWith('pt')) || null;
+    if (voz) u.voice = voz;
+    u.onend = () => setTimeout(resolve, pausaDepois);
+    window.speechSynthesis.speak(u);
+  });
+}
+
+// OVERRIDE executarFase com falarComPausa
+if (typeof executarFase !== 'undefined') {
+  const _originalExecutarFase = executarFase;
+  executarFase = async function() {
+    if (alongAtual && alongFase < alongAtual.fases.length) {
+      const fase = alongAtual.fases[alongFase];
+      if (alongFase > 0) {
+        await falarComPausa('Atenção! Vamos trocar de lado agora.', 2000);
+      }
+      await falarComPausa(fase.instrucao, 2000);
+      let cnt = fase.segundos;
+      if (alongTimer) clearInterval(alongTimer);
+      alongTimer = setInterval(() => {
+        cnt--;
+        if (cnt === Math.floor(fase.segundos / 2)) {
+          falarTexto('Continue assim, você está indo bem.');
+        }
+        if (cnt <= 3 && cnt > 0) falarTexto(cnt.toString());
+        if (cnt <= 0) {
+          clearInterval(alongTimer);
+          alongFase++;
+          setTimeout(executarFase, 2000);
+        }
+      }, 1000);
+    }
+  };
+}
+
+// AVISOS MELHORADOS
+function mostrarAviso(msg, tipo = 'info') {
+  const aviso = document.createElement('div');
+  aviso.style.cssText = `
+    position:fixed;top:20px;left:50%;transform:translateX(-50%);
+    background:#fff;padding:1rem 1.5rem;border-radius:12px;
+    box-shadow:0 4px 20px rgba(0,0,0,.15);z-index:9999;
+    font-weight:600;border-left:4px solid ${tipo==='info'?'#3B82F6':tipo==='success'?'#22C55E':'#F59E0B'};
+    animation:slideUp .3s ease;
+  `;
+  aviso.textContent = msg;
+  document.body.appendChild(aviso);
+  setTimeout(() => {
+    aviso.style.animation = 'fadeOut .3s';
+    setTimeout(() => aviso.remove(), 300);
+  }, 3000);
+}
+
+console.log('✅ Canteiro Saudável v2.0 - COMPLETO E OTIMIZADO');
+console.log('✅ Módulos v2.0: Validação de turno + Trava check-in + Áudio melhorado');
+</script>
+</body>
+</html>
