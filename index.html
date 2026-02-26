@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canteiro Saudável - Painel Administrativo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Tela de Login -->
+    <div id="login-screen" class="screen active">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="logo">
+                    <h1>🏗️ Canteiro Saudável</h1>
+                    <p>Painel Administrativo</p>
+                </div>
+                
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="admin-email">Email</label>
+                        <input 
+                            type="email" 
+                            id="admin-email" 
+                            placeholder="admin@empresa.com" 
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="admin-password">Senha</label>
+                        <input 
+                            type="password" 
+                            id="admin-password" 
+                            placeholder="••••••••" 
+                            required
+                        >
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">Entrar</button>
+                    
+                    <div id="login-error" class="error-message" style="display: none;"></div>
+                </form>
+                
+                <div class="login-footer">
+                    <p class="text-muted">Credenciais padrão: admin@canteiro.com / admin123</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela do Dashboard -->
+    <div id="dashboard-screen" class="screen">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1>🏗️ Canteiro Saudável</h1>
+                    <p id="admin-email-display" class="text-muted"></p>
+                </div>
+                <div class="header-right">
+                    <button id="export-pdf-btn" class="btn-secondary">📄 Exportar PDF</button>
+                    <button id="refresh-btn" class="btn-secondary">🔄 Atualizar</button>
+                    <button id="logout-btn" class="btn-secondary">Sair</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" data-tab="overview">📊 Visão Geral</button>
+                <button class="tab" data-tab="employees">👷 Funcionários</button>
+                <button class="tab" data-tab="reports">📈 Relatórios</button>
+            </div>
+
+            <!-- Tab Content: Overview -->
+            <div id="overview-tab" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👷</div>
+                        <div class="stat-info">
+                            <p class="stat-label">Funcionários Ativos</p>
+                            <p id="stat-active" class="stat-value">0</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">💧</div>
+                        <div class="stat-info">
+                            <p class="stat-label">Hidratação Média</p>
+                            <p id="stat-hydration" class="stat-value">0%</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">🩺</div>
+                        <div class="stat-info">
+                            <p class="stat-label">Pressão Monitorada</p>
+                            <p id="stat-pressure" class="stat-value">0</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">⚠️</div>
+                        <div class="stat-info">
+                            <p class="stat-label">Queixas na Semana</p>
+                            <p id="stat-complaints" class="stat-value">0</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <p class="stat-label">Check-ins Hoje</p>
+                            <p id="stat-checkins" class="stat-value">0</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-info">
+                            <p class="stat-label">Desafios Ativos</p>
+                            <p id="stat-challenges" class="stat-value">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title">
+                    <h2>📊 Atividade Recente</h2>
+                </div>
+                
+                <div id="recent-activity" class="activity-list">
+                    <p class="text-muted">Carregando atividades...</p>
+                </div>
+            </div>
+
+            <!-- Tab Content: Employees -->
+            <div id="employees-tab" class="tab-content">
+                <div class="section-header">
+                    <h2>👷 Lista de Funcionários</h2>
+                    <input 
+                        type="text" 
+                        id="search-employee" 
+                        class="search-input" 
+                        placeholder="Buscar por nome ou matrícula..."
+                    >
+                </div>
+                
+                <div id="employees-list" class="employees-grid">
+                    <p class="text-muted">Carregando funcionários...</p>
+                </div>
+            </div>
+
+            <!-- Tab Content: Reports -->
+            <div id="reports-tab" class="tab-content">
+                <div class="section-title">
+                    <h2>📈 Relatórios e Análises</h2>
+                </div>
+                
+                <div class="reports-grid">
+                    <div class="report-card">
+                        <h3>💧 Hidratação Semanal</h3>
+                        <canvas id="hydration-chart"></canvas>
+                    </div>
+                    
+                    <div class="report-card">
+                        <h3>🩺 Pressão Arterial</h3>
+                        <canvas id="pressure-chart"></canvas>
+                    </div>
+                    
+                    <div class="report-card">
+                        <h3>⚠️ Queixas por Tipo</h3>
+                        <canvas id="complaints-chart"></canvas>
+                    </div>
+                    
+                    <div class="report-card">
+                        <h3>✅ Check-ins Mensais</h3>
+                        <canvas id="checkins-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>Carregando dados...</p>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- jsPDF para exportação de PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- html2canvas para captura de gráficos -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <!-- App Script -->
+    <script src="app.js"></script>
+</body>
+</html>
