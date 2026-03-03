@@ -49,7 +49,9 @@ function login(email, password) {
     // Login simples (em produção, use Firebase Auth)
     const validCredentials = [
         { email: 'admin@canteiro.com', password: 'admin123' },
-        { email: 'sesmt@empresa.com', password: 'sesmt2024' }
+        { email: 'sesmt@empresa.com', password: 'sesmt2024' },
+        { email: 'denise.silva@mip.com.br', password: 'mip2024' },
+        { email: 'estefane.mendes@mip.com.br', password: 'mip2024' }
     ];
     
     const user = validCredentials.find(
